@@ -1,0 +1,31 @@
+[MASTER]
+ignore=
+
+[BASIC]
+good-names=
+    i,j,k,_,fp,it,ex,logger
+
+[MESSAGE CONTROL]
+# Reasons disabled:
+# superfluous-parens - used with :=
+# duplicate-code - for scripts acceptable
+disable=
+    superfluous-parens,
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-many-instance-attributes,
+    too-many-return-statements,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    too-many-arguments,
+    too-few-public-methods,
+    invalid-name,
+    duplicate-code,
+
+[FORMAT]
+max-line-length=119
+
+[REPORTS]
+score = false
