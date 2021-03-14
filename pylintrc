@@ -28,4 +28,4 @@ disable=
 max-line-length=119
 
 [REPORTS]
-score = false
+score = no
