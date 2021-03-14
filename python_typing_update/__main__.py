@@ -27,6 +27,10 @@ async def async_main(argv: list[str] | None = None) -> int:
         nargs='+',
     )
     parser.add_argument(
+        '--limit', type=int, default=0,
+        help="Max number of files that should be changed. No performance improvement!",
+    )
+    parser.add_argument(
         '--full-reorder',
         action='store_true',
         help="Add version_str to 'reorder-python-import' args",
@@ -53,6 +57,11 @@ async def async_main(argv: list[str] | None = None) -> int:
         '--force',
         action='store_true',
         help="Update all files. Double check changes afterwards!",
+    )
+    group1.add_argument(
+        '--only-force',
+        action='store_true',
+        help="Only update files which are likely to require extra work",
     )
 
     group2 = parser.add_mutually_exclusive_group()

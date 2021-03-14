@@ -142,7 +142,7 @@ jobs:
         run: |
           . venv/bin/activate
           pip install -e .
-          pylint ${{ env.LIB_FOLDER }}
+          pylint ${{ env.LIB_FOLDER }} tests
 
   mypy:
     name: Check mypy
@@ -171,7 +171,7 @@ jobs:
       - name: Run mypy
         run: |
           . venv/bin/activate
-          mypy ${{ env.LIB_FOLDER }}
+          mypy ${{ env.LIB_FOLDER }} tests
 
 
   prepare-tests-linux:

@@ -62,6 +62,10 @@ pre-commit run --hook-stage manual python-typing-update --all-files
 **`--verbose`**  
 Always print verbose logging.
 
+**`--limit`**  
+Max number of files that should be changed. No performance improvements,
+since the limit is only applied **after** all files have been processed.
+
 **`--full-reorder`**  
 Use additional options from [python-reorder-imports][pri] to rewrite
 - `--py38-plus` (default): Imports from `mypy_extensions` and `typing_extensions` when possible.
@@ -75,6 +79,10 @@ Check if files would be modified. Return with exitcode `1` or `0` if not. Useful
 
 **`--force`**  
 Don't revert changes if a modified comment is detected.
+Check `git diff` before committing!
+
+**`--only-force`**  
+Only update files which are likely to require extra work.
 Check `git diff` before committing!
 
 **`--py39-plus`**  
