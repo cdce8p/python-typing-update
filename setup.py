@@ -12,7 +12,7 @@ setup(
     version=version_str,
     packages=['python_typing_update'],
     install_requires=requirements,
-    python_requires='>=3.8',
+    python_requires='>=3.8, <3.10',
     entry_points={
         'console_scripts': [
             'python-typing-update = python_typing_update.__main__:main',
