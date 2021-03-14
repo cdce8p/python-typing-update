@@ -53,6 +53,8 @@ var: Any = sys.version
             True,
             id="comment_between_imports_2",
         ),
+
+        # ## comments inline ##
         pytest.param(
             """ \
 \"\"\"Long comment\"\"\"
@@ -106,6 +108,8 @@ var: Any = sys.version
             True,
             id="comment_inline_4",
         ),
+
+        # ## ignore comments ##
         pytest.param(
             """ \
 \"\"\"Long comment\"\"\"
