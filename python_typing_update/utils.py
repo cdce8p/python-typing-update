@@ -7,11 +7,12 @@ import asyncio
 import os
 import token
 import tokenize
+from collections.abc import Iterable
 from pathlib import Path
 from typing import TextIO
 
 
-def check_files_exist(file_list: list[str]) -> list[str]:
+def check_files_exist(file_list: Iterable[str]) -> list[str]:
     """Check if all files exist. Return False if not."""
     file_errors: list[str] = []
     cwd = Path(os.getcwd())
@@ -21,7 +22,7 @@ def check_files_exist(file_list: list[str]) -> list[str]:
     return sorted(file_errors)
 
 
-async def async_restore_files(file_list: list[str]) -> None:
+async def async_restore_files(file_list: Iterable[str]) -> None:
     if not file_list:
         return
     process = await asyncio.create_subprocess_shell(
@@ -30,7 +31,7 @@ async def async_restore_files(file_list: list[str]) -> None:
     await process.communicate()
 
 
-async def async_check_uncommitted_changes(file_list: list[str]) -> bool:
+async def async_check_uncommitted_changes(file_list: Iterable[str]) -> bool:
     """Check for uncommitted changes.
 
     Returns:

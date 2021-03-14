@@ -127,15 +127,14 @@ async def async_run(args: argparse.Namespace) -> int:
         print("Abort! Commit all changes to '.py' files before running again.")
         return 11
 
-    files_with_comments: list[str] = []
+    files_with_comments: set[str] = set()
     for filename in args.filenames:
         with open(filename) as fp:
             if check_comment_between_imports(fp):
-                files_with_comments.append(filename)
-    files_with_comments = sorted(files_with_comments)
+                files_with_comments.add(filename)
 
     loop = asyncio.get_running_loop()
-    filenames: list[str] = files_with_comments if args.only_force else args.filenames
+    filenames: list[str] | set[str] = files_with_comments.copy() if args.only_force else args.filenames
     files_updated: list[str] = []
     files_no_changes: list[str] = []
 
@@ -170,15 +169,17 @@ async def async_run(args: argparse.Namespace) -> int:
             return 1
         return 0
 
+    files_with_comments.intersection_update(set(files_updated))
     if files_with_comments:
+        files_with_comments_list: list[str] = sorted(list(files_with_comments))
         if args.force or args.only_force:
             print("Force mode selected!")
             print("Make sure to double check:")
-            for file_ in files_with_comments:
+            for file_ in files_with_comments_list:
                 print(f" - {file_}")
         else:
             print("Could not update all files, check:")
-            for file_ in files_with_comments:
+            for file_ in files_with_comments_list:
                 print(f" - {file_}")
             await async_restore_files(files_with_comments)
 
