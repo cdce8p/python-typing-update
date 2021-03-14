@@ -107,20 +107,30 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
             id="23_comment_3_no_change",
         ),
         pytest.param(
+            'comment_4.py', 'comment_4_no_change.py',
+            None, 2,
+            id="24_comment_4_no_change",
+        ),
+        pytest.param(
             'comment_1.py', 'comment_1_forced.py',
             ['--force'], 2,
-            id="24_comment_1_forced",
+            id="25_comment_1_forced",
             marks=pytest.mark.xfail(reason="Not implemented yet")
         ),
         pytest.param(
             'comment_2.py', 'comment_2_forced.py',
             ['--force'], 2,
-            id="25_comment_2_forced",
+            id="26_comment_2_forced",
         ),
         pytest.param(
             'comment_3.py', 'comment_3_forced.py',
             ['--force'], 2,
-            id="26_comment_3_forced",
+            id="27_comment_3_forced",
+        ),
+        pytest.param(
+            'comment_4.py', 'comment_4_forced.py',
+            ['--force'], 2,
+            id="28_comment_4_forced",
         ),
         pytest.param(
             'comment_no_issue_1.py', 'comment_no_issue_1_fixed.py',
