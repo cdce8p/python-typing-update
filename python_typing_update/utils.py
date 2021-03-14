@@ -5,7 +5,10 @@ from __future__ import annotations
 
 import asyncio
 import os
+import token
+import tokenize
 from pathlib import Path
+from typing import TextIO
 
 
 def check_files_exist(file_list: list[str]) -> list[str]:
@@ -56,3 +59,59 @@ async def async_check_changes(file_list: list[str]) -> list[str]:
     )
     stdout, _ = await process.communicate()
     return sorted([file_ for file_ in stdout.decode().strip().split('\n') if file_])
+
+
+def check_comment_between_imports(fp: TextIO) -> bool:
+    """Return True if comment is found between imports.
+
+    Sign that the file can't be updated automatically.
+    """
+    flag_in_import_block: bool = False
+    line_first_import: int | None = None
+    line_last_import: int = 0
+    line_comments: list[tuple[int, int]] = []
+
+    tokens = tokenize.generate_tokens(fp.readline)
+    while True:
+        try:
+            t = next(tokens)
+            if flag_in_import_block is True:
+                if t.type == token.NEWLINE:
+                    flag_in_import_block = False
+                elif t.type == token.COMMENT:
+                    # Comment in same line as import statement
+                    return True
+                continue
+            if t.type == token.NAME:
+                if t.string in ('import', 'from'):
+                    flag_in_import_block = True
+                    if line_first_import is None:
+                        line_first_import = t.start[0]
+                    line_last_import = t.start[0]
+                else:
+                    # Any other code block,
+                    # not in main import block anymore
+                    break
+            elif t.type in (token.COMMENT, token.STRING):
+                line_comments.append((t.type, t.start[0]))
+        except StopIteration:
+            break
+
+    for token_type, line_number in line_comments:
+        if line_first_import is None:
+            # No import block detected
+            return False
+        if (
+            token_type == token.COMMENT
+            and line_number <= line_last_import
+        ):
+            # Report all comments before and in the main import block
+            return True
+        if (
+            token_type == token.STRING
+            and line_first_import <= line_number <= line_last_import
+        ):
+            # Only report strings if they are inbetween imports
+            # Ignore any ones at beginning of file
+            return True
+    return False

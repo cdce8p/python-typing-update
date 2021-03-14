@@ -16,8 +16,8 @@ from isort.main import main as isort_main
 from pyupgrade._main import main as pyupgrade_main
 
 from .utils import (
-    async_check_changes, async_check_uncommitted_changes,
-    async_restore_files, check_files_exist)
+    async_check_uncommitted_changes, async_restore_files,
+    check_comment_between_imports, check_files_exist)
 
 logger = logging.getLogger("typing-update")
 
@@ -127,10 +127,16 @@ async def async_run(args: argparse.Namespace) -> int:
         print("Abort! Commit all changes to '.py' files before running again.")
         return 11
 
+    files_with_comments: list[str] = []
+    for filename in args.filenames:
+        with open(filename) as fp:
+            if check_comment_between_imports(fp):
+                files_with_comments.append(filename)
+    files_with_comments = sorted(files_with_comments)
+
     loop = asyncio.get_running_loop()
     files_updated: list[str] = []
     files_no_changes: list[str] = []
-    files_with_comments: list[str] = []
 
     # Mock builtin print to omit output
     original_print = builtins.print
@@ -156,7 +162,6 @@ async def async_run(args: argparse.Namespace) -> int:
             return 1
         return 0
 
-    files_with_comments = await async_check_changes(files_updated)
     if files_with_comments:
         if args.force:
             print("Force mode selected!")

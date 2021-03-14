@@ -7,7 +7,7 @@ import aiofiles
 import pytest
 
 from python_typing_update.__main__ import async_main
-from python_typing_update.main import async_restore_files
+from python_typing_update.utils import async_restore_files
 
 FIXTURE_PATH = "tests/fixtures/"
 
@@ -94,7 +94,6 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
             'comment_1.py', 'comment_1_no_change.py',
             None, 2,
             id="21_comment_1_no_change",
-            marks=pytest.mark.xfail(reason="Not implemented yet")
         ),
         pytest.param(
             'comment_2.py', 'comment_2_no_change.py',
@@ -115,7 +114,6 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
             'comment_1.py', 'comment_1_forced.py',
             ['--force'], 2,
             id="25_comment_1_forced",
-            marks=pytest.mark.xfail(reason="Not implemented yet")
         ),
         pytest.param(
             'comment_2.py', 'comment_2_forced.py',
