@@ -2,7 +2,6 @@ from setuptools import setup
 
 from python_typing_update.const import version_str
 
-
 with open('requirements.txt') as fp:
     requirements = [
         line.strip().split(' ', 1)[0] for line in fp.read().splitlines()

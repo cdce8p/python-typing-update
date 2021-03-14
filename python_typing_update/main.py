@@ -133,13 +133,9 @@ async def async_check_uncommitted_changes(file_list: list[str]) -> bool:
         stdout=asyncio.subprocess.PIPE,
     )
     stdout, _ = await process.communicate()
-    files_uncommitted: list[str] = [file_ for item in stdout.decode().split('\n')
-                                    if (file_ := item.strip())]
-    for file_ in file_list:
-        for uncommited in files_uncommitted:
-            if file_ == uncommited:
-                return False
-    return True
+    files_uncommitted: set[str] = {file_ for item in stdout.decode().split('\n')
+                                   if (file_ := item.strip())}
+    return not any(True for file_ in file_list if file_ in files_uncommitted)
 
 
 async def async_check_changes(file_list: list[str]) -> list[str]:
