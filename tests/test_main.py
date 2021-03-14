@@ -30,6 +30,24 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
         await async_restore_files(file_list)
 
 
+async def async_test_main(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+):
+    filename = FIXTURE_PATH + filename
+    control = FIXTURE_PATH + control
+    if argv is None:
+        argv = ["--disable-committed-check"]
+    else:
+        argv.append("--disable-committed-check")
+    argv.append(filename)
+    async with async_restore_fixtures([filename]):
+        assert returncode == await async_main(argv)
+        await async_check_changes(filename, control)
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
@@ -69,8 +87,21 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
             ['-v'], 12,
             id="debug",
         ),
+    )
+)
+async def test_main(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+):
+    await async_test_main(filename, control, argv, returncode)
 
-        # ## type alias ##
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
         pytest.param(
             'type_alias_39.py', 'type_alias_39_no_change.py',
             ['--py38-plus'], 0,
@@ -92,8 +123,21 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
             id="type_alias_pep604_310_updated",
             marks=pytest.mark.xfail(reason="Not implented in mypy + pyupgrade (yet)"),
         ),
+    )
+)
+async def test_main_type_alias(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+):
+    await async_test_main(filename, control, argv, returncode)
 
-        # ## comment ##
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
         pytest.param(
             'comment_1.py', 'comment_1_no_change.py',
             None, 2,
@@ -134,8 +178,21 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
             ['--force'], 2,
             id="comment_4_forced",
         ),
+    )
+)
+async def test_main_comment(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+):
+    await async_test_main(filename, control, argv, returncode)
 
-        # ## comment no_issue ##
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
         pytest.param(
             'comment_no_issue_1.py', 'comment_no_issue_1_fixed.py',
             None, 0,
@@ -158,19 +215,10 @@ async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, N
         ),
     )
 )
-async def test_main(
+async def test_main_comment_no_issue(
     filename: str,
     control: str,
     argv: list[str] | None,
     returncode: int,
 ):
-    filename = FIXTURE_PATH + filename
-    control = FIXTURE_PATH + control
-    if argv is None:
-        argv = ["--disable-committed-check"]
-    else:
-        argv.append("--disable-committed-check")
-    argv.append(filename)
-    async with async_restore_fixtures([filename]):
-        assert returncode == await async_main(argv)
-        await async_check_changes(filename, control)
+    await async_test_main(filename, control, argv, returncode)
