@@ -135,6 +135,7 @@ async def async_run(args: argparse.Namespace) -> int:
     files_with_comments = sorted(files_with_comments)
 
     loop = asyncio.get_running_loop()
+    filenames: list[str] = files_with_comments if args.only_force else args.filenames
     files_updated: list[str] = []
     files_no_changes: list[str] = []
 
@@ -143,7 +144,7 @@ async def async_run(args: argparse.Namespace) -> int:
     builtins.print = lambda *args, **kwargs: None
 
     return_values = await asyncio.gather(
-        *[typing_update(loop, filename, args) for filename in args.filenames])
+        *[typing_update(loop, filename, args) for filename in filenames])
     for status, filename in return_values:
         if status == 0:
             files_updated.append(filename)
@@ -152,6 +153,13 @@ async def async_run(args: argparse.Namespace) -> int:
 
     builtins.print = original_print
     await async_restore_files(files_no_changes)
+
+    if args.limit > 0 and len(files_updated) > args.limit:
+        print(
+            f"Limit applied! Only updated the first {args.limit} "
+            f"of {len(files_updated)} files")
+        async_restore_files(files_updated[args.limit:])
+        files_updated = files_updated[:args.limit]
 
     if args.check is True:
         await async_restore_files(files_updated)
@@ -163,7 +171,7 @@ async def async_run(args: argparse.Namespace) -> int:
         return 0
 
     if files_with_comments:
-        if args.force:
+        if args.force or args.only_force:
             print("Force mode selected!")
             print("Make sure to double check:")
             for file_ in files_with_comments:
@@ -175,12 +183,17 @@ async def async_run(args: argparse.Namespace) -> int:
             await async_restore_files(files_with_comments)
 
     print("---")
-    print(f"All files: {len(args.filenames)}")
+    print(f"All files: {len(filenames)}")
     print(f"No changes: {len(files_no_changes)}")
     print(f"Files updated: {len(files_updated) - len(files_with_comments)}")
     print(f"Files (no automatic update): {len(files_with_comments)}")
 
-    if not files_with_comments and not args.force and args.verbose == 0:
+    if (
+        not files_with_comments
+        and not args.force
+        and not args.only_force
+        and args.verbose == 0
+    ):
         return 0
     if files_with_comments:
         return 2
