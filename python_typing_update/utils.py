@@ -46,21 +46,6 @@ async def async_check_uncommitted_changes(file_list: list[str]) -> bool:
     return not any(True for file_ in file_list if file_ in files_uncommitted)
 
 
-async def async_check_changes(file_list: list[str]) -> list[str]:
-    """Check if comment was change in files.
-
-    That is a sing we can't update it automatically.
-    """
-    if not file_list:
-        return []
-    process = await asyncio.create_subprocess_shell(
-        f"git diff -G\"^#|^from.*#|^import.*#\" --name-only -- {' '.join(file_list)}",
-        stdout=asyncio.subprocess.PIPE,
-    )
-    stdout, _ = await process.communicate()
-    return sorted([file_ for file_ in stdout.decode().strip().split('\n') if file_])
-
-
 def check_comment_between_imports(fp: TextIO) -> bool:
     """Return True if comment is found between imports.
 
