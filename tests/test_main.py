@@ -59,6 +59,11 @@ async def async_test_main(
             id="typing_updated",
         ),
         pytest.param(
+            'empty_line.py', 'empty_line_fixed.py',
+            None, 0,
+            id="typing_updated_empty_line",
+        ),
+        pytest.param(
             'no_changes.py', 'no_changes_no_change.py',
             None, 0,
             id="no_changes",
@@ -225,6 +230,16 @@ async def test_main_comment(
             'comment_no_issue_4.py', 'comment_no_issue_4_fixed.py',
             None, 0,
             id="comment_no_issue_4",
+        ),
+        pytest.param(
+            'comment_no_issue_5.py', 'comment_no_issue_5_fixed.py',
+            None, 0,
+            id="comment_no_issue_5",
+        ),
+        pytest.param(
+            'comment_no_issue_6.py', 'comment_no_issue_6_fixed.py',
+            None, 0,
+            id="comment_no_issue_6",
         ),
     )
 )

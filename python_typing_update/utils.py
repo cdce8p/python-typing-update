@@ -105,21 +105,11 @@ def check_comment_between_imports(fp: TextIO) -> FileStatus:
         # If inline comment was detected, stop here
         return return_value
 
-    for token_type, line_number in line_comments:
+    for _, line_number in line_comments:
         if line_first_import is None:
             # No import block detected
             return FileStatus.CLEAR
-        if (
-            token_type == token.COMMENT
-            and line_number <= line_last_import
-        ):
-            # Report all comments before and in the main import block
-            return FileStatus.COMMENT
-        if (
-            token_type == token.STRING
-            and line_first_import <= line_number <= line_last_import
-        ):
-            # Only report strings if they are inbetween imports
-            # Ignore any ones at beginning of file
+        if (line_first_import < line_number < line_last_import):
+            # Report all comments in the main import block
             return FileStatus.COMMENT
     return FileStatus.CLEAR

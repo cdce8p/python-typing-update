@@ -21,8 +21,23 @@ from typing import (
 
 var: Any = sys.version
 """,
-            FileStatus.COMMENT,
-            id="comment_before_imports",
+            FileStatus.CLEAR,
+            id="comment_before_imports_1",
+        ),
+        pytest.param(
+            """ \
+# This is a comment
+\"\"\"Long comment\"\"\"
+import sys
+from typing import (
+    Any, List,
+    Union
+)
+
+var: Any = sys.version
+""",
+            FileStatus.CLEAR,
+            id="comment_before_imports_2",
         ),
         pytest.param(
             """ \
