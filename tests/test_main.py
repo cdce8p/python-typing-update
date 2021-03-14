@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 
 import aiofiles
 import pytest
+from _pytest.capture import CaptureFixture
 
 from python_typing_update.__main__ import async_main
 from python_typing_update.utils import async_restore_files
@@ -159,6 +160,11 @@ async def test_main_type_alias(
             id="comment_4_no_change",
         ),
         pytest.param(
+            'comment_5.py', 'comment_5_no_change.py',
+            None, 2,
+            id="comment_5_no_change",
+        ),
+        pytest.param(
             'comment_1.py', 'comment_1_forced.py',
             ['--force'], 2,
             id="comment_1_forced",
@@ -178,6 +184,11 @@ async def test_main_type_alias(
             ['--force'], 2,
             id="comment_4_forced",
         ),
+        pytest.param(
+            'comment_5.py', 'comment_5_forced.py',
+            ['--force'], 2,
+            id="comment_5_forced",
+        ),
     )
 )
 async def test_main_comment(
@@ -185,8 +196,10 @@ async def test_main_comment(
     control: str,
     argv: list[str] | None,
     returncode: int,
+    capsys: CaptureFixture,
 ):
     await async_test_main(filename, control, argv, returncode)
+    assert filename in capsys.readouterr().out
 
 
 @pytest.mark.asyncio
@@ -216,6 +229,41 @@ async def test_main_comment(
     )
 )
 async def test_main_comment_no_issue(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+):
+    await async_test_main(filename, control, argv, returncode)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
+        pytest.param(
+            'comment_import_no_issue_1.py', 'comment_import_no_issue_1_fixed.py',
+            None, 0,
+            id="comment_import_no_issue_1",
+        ),
+        pytest.param(
+            'comment_import_no_issue_2.py', 'comment_import_no_issue_2_fixed.py',
+            None, 0,
+            id="comment_import_no_issue_2",
+        ),
+        pytest.param(
+            'comment_import_no_issue_3.py', 'comment_import_no_issue_3_fixed.py',
+            None, 0,
+            id="comment_import_no_issue_3",
+        ),
+        pytest.param(
+            'comment_import_no_issue_4.py', 'comment_import_no_issue_4_fixed.py',
+            None, 0,
+            id="comment_import_no_issue_4",
+        ),
+    )
+)
+async def test_main_comment_import_no_issue(
     filename: str,
     control: str,
     argv: list[str] | None,

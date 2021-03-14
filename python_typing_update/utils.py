@@ -11,6 +11,8 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import TextIO
 
+from .const import FileStatus
+
 
 def check_files_exist(file_list: Iterable[str]) -> list[str]:
     """Check if all files exist. Return False if not."""
@@ -47,26 +49,42 @@ async def async_check_uncommitted_changes(file_list: Iterable[str]) -> bool:
     return not any(True for file_ in file_list if file_ in files_uncommitted)
 
 
-def check_comment_between_imports(fp: TextIO) -> bool:
+def check_comment_between_imports(fp: TextIO) -> FileStatus:
     """Return True if comment is found between imports.
 
     Sign that the file can't be updated automatically.
     """
     flag_in_import_block: bool = False
+    flag_multiple_imports: bool = False
+    flag_typing_import: bool = False
+    token_name_count: int = 0
     line_first_import: int | None = None
     line_last_import: int = 0
     line_comments: list[tuple[int, int]] = []
+    return_value: FileStatus = FileStatus.CLEAR
 
     tokens = tokenize.generate_tokens(fp.readline)
     while True:
         try:
             t = next(tokens)
             if flag_in_import_block is True:
-                if t.type == token.NEWLINE:
+                if t.type == token.NAME and token_name_count == 0:
+                    token_name_count += 1
+                    if t.string == 'typing':
+                        flag_typing_import = True
+                elif t.type == token.NEWLINE:
                     flag_in_import_block = False
+                    flag_multiple_imports = False
+                    flag_typing_import = False
+                    token_name_count = 0
+                elif t.type == token.OP and t.string != '.':
+                    flag_multiple_imports = True
                 elif t.type == token.COMMENT:
-                    # Comment in same line as import statement
-                    return True
+                    if flag_typing_import is True:
+                        return_value = return_value | FileStatus.COMMENT | FileStatus.COMMENT_TYPING
+                    elif flag_multiple_imports is True:
+                        # Comment in same line as import statement
+                        return_value = return_value | FileStatus.COMMENT
                 continue
             if t.type == token.NAME:
                 if t.string in ('import', 'from'):
@@ -83,21 +101,25 @@ def check_comment_between_imports(fp: TextIO) -> bool:
         except StopIteration:
             break
 
+    if return_value != FileStatus.CLEAR:
+        # If inline comment was detected, stop here
+        return return_value
+
     for token_type, line_number in line_comments:
         if line_first_import is None:
             # No import block detected
-            return False
+            return FileStatus.CLEAR
         if (
             token_type == token.COMMENT
             and line_number <= line_last_import
         ):
             # Report all comments before and in the main import block
-            return True
+            return FileStatus.COMMENT
         if (
             token_type == token.STRING
             and line_first_import <= line_number <= line_last_import
         ):
             # Only report strings if they are inbetween imports
             # Ignore any ones at beginning of file
-            return True
-    return False
+            return FileStatus.COMMENT
+    return FileStatus.CLEAR
