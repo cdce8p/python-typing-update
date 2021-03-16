@@ -6,19 +6,22 @@ from __future__ import annotations
 import argparse
 import asyncio
 import builtins
+import io
 import logging
+from collections.abc import Iterable
 from functools import partial
 from io import StringIO
 
+import aiofiles
 import reorder_python_imports
 from autoflake import _main as autoflake_main
 from isort.main import main as isort_main
 from pyupgrade._main import main as pyupgrade_main
 
-from .const import FileStatus
+from .const import FileAttributes, FileStatus
 from .utils import (
     async_check_uncommitted_changes, async_restore_files,
-    check_comment_between_imports, check_files_exist)
+    check_comment_between_imports, check_files_exist, extract_imports)
 
 logger = logging.getLogger("typing-update")
 
@@ -107,6 +110,32 @@ async def typing_update(
     return 0, filename
 
 
+async def async_load_files(
+    args: argparse.Namespace,
+    filenames: Iterable[str], *,
+    check_comments: bool,
+) -> dict[str, FileAttributes]:
+    """Process files from file list."""
+    active_tasks: int = 0
+
+    async def async_load_file(filename: str) -> tuple[str, FileAttributes]:
+        """Load file into memory and perform token analysis."""
+        nonlocal active_tasks
+        while active_tasks > args.concurrent_files:
+            await asyncio.sleep(0)
+        active_tasks += 1
+        async with aiofiles.open(filename, encoding="utf-8") as fp:
+            data = await fp.read()
+        file_status = check_comment_between_imports(io.StringIO(data)) \
+            if check_comments is True else FileStatus.CLEAR
+        imports_set = extract_imports(io.StringIO(data))
+        active_tasks -= 1
+        return filename, FileAttributes(file_status, imports_set)
+
+    results = await asyncio.gather(*[async_load_file(file_) for file_ in filenames])
+    return dict(results)
+
+
 async def async_run(args: argparse.Namespace) -> int:
     """Update Python typing syntax.
 
@@ -129,15 +158,11 @@ async def async_run(args: argparse.Namespace) -> int:
         print("Abort! Commit all changes to '.py' files before running again.")
         return 11
 
-    filenames: dict[str, FileStatus] = {}
-    for filename in args.filenames:
-        with open(filename) as fp:
-            result = check_comment_between_imports(fp)
-            filenames[filename] = result
+    filenames: dict[str, FileAttributes] = await async_load_files(args, args.filenames, check_comments=True)
 
     if args.only_force:
-        filenames = {filename: file_status for filename, file_status in filenames.items()
-                     if file_status != FileStatus.CLEAR}
+        filenames = {filename: attrs for filename, attrs in filenames.items()
+                     if attrs.status != FileStatus.CLEAR}
 
     loop = asyncio.get_running_loop()
     files_updated: list[str] = []
@@ -148,7 +173,7 @@ async def async_run(args: argparse.Namespace) -> int:
     builtins.print = lambda *args, **kwargs: None
 
     return_values = await asyncio.gather(
-        *[typing_update(loop, filename, args, file_status) for filename, file_status in filenames.items()])
+        *[typing_update(loop, filename, args, attrs.status) for filename, attrs in filenames.items()])
     for status, filename in return_values:
         if status == 0:
             files_updated.append(filename)
@@ -176,35 +201,53 @@ async def async_run(args: argparse.Namespace) -> int:
 
     files_updated_set: set[str] = set(files_updated)
     files_with_comments = sorted([
-        filename for filename, file_status in filenames.items()
-        if FileStatus.COMMENT in file_status and filename in files_updated_set
+        filename for filename, attrs in filenames.items()
+        if FileStatus.COMMENT in attrs.status and filename in files_updated_set
     ])
-    if files_with_comments:
+    files_imports_changed: list[str] = []
+    for file_, attrs in (await async_load_files(args, files_updated_set, check_comments=False)).items():
+        import_diff = filenames[file_].imports.difference(attrs.imports)
+        for import_ in import_diff:
+            if not import_.startswith('typing'):
+                files_imports_changed.append(file_)
+                break
+    files_imports_changed = sorted(files_imports_changed)
+    files_no_automatic_update = set(files_with_comments + files_imports_changed)
+
+    if files_no_automatic_update:
         if args.force or args.only_force:
             print("Force mode selected!")
             print("Make sure to double check:")
             for file_ in files_with_comments:
                 print(f" - {file_}")
+            if files_with_comments and files_imports_changed:
+                print(" --")
+            for file_ in files_imports_changed:
+                print(f" - {file_}")
         else:
             print("Could not update all files, check:")
             for file_ in files_with_comments:
                 print(f" - {file_}")
-            await async_restore_files(files_with_comments)
+            if files_with_comments and files_imports_changed:
+                print(" --")
+            for file_ in files_imports_changed:
+                print(f" - {file_}")
+            await async_restore_files(files_no_automatic_update)
 
     print("---")
     print(f"All files: {len(filenames)}")
     print(f"No changes: {len(files_no_changes)}")
-    print(f"Files updated: {len(files_updated) - len(files_with_comments)}")
-    print(f"Files (no automatic update): {len(files_with_comments)}")
+    print(f"Files updated: {len(files_updated) - len(files_no_automatic_update)}")
+    print(f"Files (no automatic update): {len(files_no_automatic_update)}")
 
     if (
-        not files_with_comments
+        not files_no_automatic_update
         and not args.force
         and not args.only_force
         and args.verbose == 0
     ):
         return 0
-    if files_with_comments:
+    if files_no_automatic_update:
         return 2
     if args.verbose > 0:
         return 12

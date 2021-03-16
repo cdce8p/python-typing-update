@@ -113,3 +113,58 @@ def check_comment_between_imports(fp: TextIO) -> FileStatus:
             # Report all comments in the main import block
             return FileStatus.COMMENT
     return FileStatus.CLEAR
+
+
+def extract_imports(fp: TextIO) -> set[str]:
+    """Create set of all imports in main import block."""
+    flag_in_import_block: bool = False
+    flag_relative_import: bool | None = None
+    flag_imports: bool = False
+    flag_last_token_name: bool = False
+    current_package: str = ''
+    imports: set[str] = set()
+
+    tokens = tokenize.generate_tokens(fp.readline)
+    while True:
+        try:
+            t = next(tokens)
+            if flag_in_import_block is True:
+                if t.type == token.NEWLINE:
+                    if flag_relative_import is False:
+                        imports.add(current_package)
+                    flag_in_import_block = False
+                    flag_relative_import = None
+                    flag_imports = False
+                    flag_last_token_name = False
+                    current_package = ''
+                elif t.type == token.NAME and t.string == 'import':
+                    flag_imports = True
+                elif t.type == token.NAME and flag_last_token_name is False:
+                    if (
+                        flag_relative_import is False
+                        or flag_relative_import is True
+                        and flag_imports is False
+                    ):
+                        current_package += t.string
+                    elif flag_relative_import is True and flag_imports is True:
+                        imports.add(f"{current_package}.{t.string}")
+                elif t.type == token.OP and t.string == '.':
+                    current_package += '.'
+                elif t.type == token.OP and t.string == ',' and flag_relative_import is False:
+                    imports.add(current_package)
+                    current_package = ''
+
+                flag_last_token_name = (t.type == token.NAME and t.string != 'import')
+                continue
+            if t.type == token.NAME:
+                if t.string == 'import':
+                    flag_in_import_block = True
+                    flag_relative_import = False
+                elif t.string == 'from':
+                    flag_in_import_block = True
+                    flag_relative_import = True
+                else:
+                    break
+        except StopIteration:
+            break
+    return imports

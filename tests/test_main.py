@@ -36,6 +36,7 @@ async def async_test_main(
     control: str,
     argv: list[str] | None,
     returncode: int,
+    capsys: CaptureFixture | None = None,
 ):
     filename = FIXTURE_PATH + filename
     control = FIXTURE_PATH + control
@@ -45,8 +46,11 @@ async def async_test_main(
         argv.append("--disable-committed-check")
     argv.append(filename)
     async with async_restore_fixtures([filename]):
-        assert returncode == await async_main(argv)
+        ret = await async_main(argv)
+        assert returncode == ret
         await async_check_changes(filename, control)
+    if ret in (1, 2) and capsys:
+        assert filename in capsys.readouterr().out
 
 
 @pytest.mark.asyncio
@@ -100,8 +104,9 @@ async def test_main(
     control: str,
     argv: list[str] | None,
     returncode: int,
+    capsys: CaptureFixture,
 ):
-    await async_test_main(filename, control, argv, returncode)
+    await async_test_main(filename, control, argv, returncode, capsys)
 
 
 @pytest.mark.asyncio
@@ -203,8 +208,7 @@ async def test_main_comment(
     returncode: int,
     capsys: CaptureFixture,
 ):
-    await async_test_main(filename, control, argv, returncode)
-    assert filename in capsys.readouterr().out
+    await async_test_main(filename, control, argv, returncode, capsys)
 
 
 @pytest.mark.asyncio
@@ -285,3 +289,155 @@ async def test_main_comment_import_no_issue(
     returncode: int,
 ):
     await async_test_main(filename, control, argv, returncode)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
+        pytest.param(
+            'unused_import_1.py', 'unused_import_1_fixed.py',
+            None, 0,
+            id="unused_import_1_fixed",
+        ),
+        pytest.param(
+            'unused_import_2.py', 'unused_import_2_fixed.py',
+            None, 0,
+            id="unused_import_2_fixed",
+        ),
+        pytest.param(
+            'unused_import_3.py', 'unused_import_3_fixed.py',
+            None, 0,
+            id="unused_import_3_fixed",
+        ),
+        pytest.param(
+            'unused_import_4.py', 'unused_import_4_fixed.py',
+            None, 0,
+            id="unused_import_4_fixed",
+        ),
+        pytest.param(
+            'unused_import_5.py', 'unused_import_5_no_change.py',
+            None, 2,
+            id="unused_import_5_no_change",
+        ),
+        pytest.param(
+            'unused_import_6.py', 'unused_import_6_no_change.py',
+            None, 2,
+            id="unused_import_6_no_change",
+        ),
+        pytest.param(
+            'unused_import_7.py', 'unused_import_7_no_change.py',
+            None, 2,
+            id="unused_import_7_no_change",
+        ),
+        pytest.param(
+            'unused_import_8.py', 'unused_import_8_no_change.py',
+            None, 2,
+            id="unused_import_8_no_change",
+        ),
+        pytest.param(
+            'unused_import_5.py', 'unused_import_5_forced.py',
+            ['--force'], 2,
+            id="unused_import_5_forced",
+        ),
+        pytest.param(
+            'unused_import_6.py', 'unused_import_6_forced.py',
+            ['--force'], 2,
+            id="unused_import_6_forced",
+        ),
+        pytest.param(
+            'unused_import_7.py', 'unused_import_7_forced.py',
+            ['--force'], 2,
+            id="unused_import_7_forced",
+        ),
+        pytest.param(
+            'unused_import_8.py', 'unused_import_8_forced.py',
+            ['--force'], 2,
+            id="unused_import_8_forced",
+        ),
+    )
+)
+async def test_main_unused_import(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+    capsys: CaptureFixture,
+):
+    await async_test_main(filename, control, argv, returncode, capsys)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
+        pytest.param(
+            'unused_import_comment_1.py', 'unused_import_comment_1_fixed.py',
+            None, 0,
+            id="unused_import_comment_1_fixed",
+        ),
+        pytest.param(
+            'unused_import_comment_2.py', 'unused_import_comment_2_fixed.py',
+            None, 0,
+            id="unused_import_comment_2_fixed",
+        ),
+        pytest.param(
+            'unused_import_comment_5.py', 'unused_import_comment_5_fixed.py',
+            None, 0,
+            id="unused_import_comment_5_fixed",
+        ),
+        pytest.param(
+            'unused_import_comment_6.py', 'unused_import_comment_6_fixed.py',
+            None, 0,
+            id="unused_import_comment_6_fixed",
+        ),
+        pytest.param(
+            'unused_import_comment_3.py', 'unused_import_comment_3_no_change.py',
+            None, 2,
+            id="unused_import_comment_3_no_change",
+        ),
+        pytest.param(
+            'unused_import_comment_4.py', 'unused_import_comment_4_no_change.py',
+            None, 2,
+            id="unused_import_comment_4_no_change",
+        ),
+        pytest.param(
+            'unused_import_comment_7.py', 'unused_import_comment_7_no_change.py',
+            None, 2,
+            id="unused_import_comment_7_no_change",
+        ),
+        pytest.param(
+            'unused_import_comment_8.py', 'unused_import_comment_8_no_change.py',
+            None, 2,
+            id="unused_import_comment_8_no_change",
+        ),
+        pytest.param(
+            'unused_import_comment_3.py', 'unused_import_comment_3_forced.py',
+            ['--force'], 2,
+            id="unused_import_comment_3_forced",
+        ),
+        pytest.param(
+            'unused_import_comment_4.py', 'unused_import_comment_4_forced.py',
+            ['--force'], 2,
+            id="unused_import_comment_4_forced",
+        ),
+        pytest.param(
+            'unused_import_comment_7.py', 'unused_import_comment_7_forced.py',
+            ['--force'], 2,
+            id="unused_import_comment_7_forced",
+        ),
+        pytest.param(
+            'unused_import_comment_8.py', 'unused_import_comment_8_forced.py',
+            ['--force'], 2,
+            id="unused_import_comment_8_forced",
+        ),
+    )
+)
+async def test_main_unused_import_comment(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+    capsys: CaptureFixture,
+):
+    await async_test_main(filename, control, argv, returncode, capsys)

@@ -13,9 +13,21 @@ from .main import async_run
 logger = logging.getLogger(__name__)
 
 
+class CustomHelpFormatter(argparse.HelpFormatter):
+    def __init__(
+        self, prog: str, indent_increment: int = 2,
+        max_help_position: int = 24, width: int | None = None,
+    ) -> None:
+        max_help_position = 40
+        super().__init__(
+            prog, indent_increment=indent_increment,
+            max_help_position=max_help_position, width=width)
+
+
 async def async_main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Tool to update Python typing syntax.",
+        formatter_class=CustomHelpFormatter,
     )
     parser.add_argument(
         '-v', '--verbose',
@@ -29,6 +41,10 @@ async def async_main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         '--limit', type=int, default=0,
         help="Max number of files that should be changed. No performance improvement!",
+    )
+    parser.add_argument(
+        '--concurrent-files', metavar="NUM", type=int, default=100,
+        help="Number of files to process concurrently during initial load. (default: %(default)s)"
     )
     parser.add_argument(
         '--full-reorder',
