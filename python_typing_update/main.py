@@ -8,6 +8,7 @@ import asyncio
 import builtins
 import io
 import logging
+from collections.abc import Iterable
 from functools import partial
 from io import StringIO
 
@@ -109,20 +110,25 @@ async def typing_update(
     return 0, filename
 
 
-async def async_load_files(filenames: list[str]) -> dict[str, FileAttributes]:
+async def async_load_files(
+    args: argparse.Namespace,
+    filenames: Iterable[str], *,
+    check_comments: bool,
+) -> dict[str, FileAttributes]:
     active_tasks: int = 0
 
     async def async_load_file(filename: str) -> tuple[str, FileAttributes]:
         nonlocal active_tasks
-        while active_tasks > 20:
+        while active_tasks > args.concurrent_files:
             await asyncio.sleep(0)
         active_tasks += 1
         async with aiofiles.open(filename, encoding="utf-8") as fp:
             data = await fp.read()
-        flag_comments = check_comment_between_imports(io.StringIO(data))
+        file_status = check_comment_between_imports(io.StringIO(data)) \
+            if check_comments is True else FileStatus.CLEAR
         imports_set = list_imports(io.StringIO(data))
         active_tasks -= 1
-        return filename, FileAttributes(flag_comments, imports_set)
+        return filename, FileAttributes(file_status, imports_set)
 
     results = await asyncio.gather(*[async_load_file(file_) for file_ in filenames])
     return dict(results)
@@ -150,7 +156,7 @@ async def async_run(args: argparse.Namespace) -> int:
         print("Abort! Commit all changes to '.py' files before running again.")
         return 11
 
-    filenames: dict[str, FileAttributes] = await async_load_files(args.filenames)
+    filenames: dict[str, FileAttributes] = await async_load_files(args, args.filenames, check_comments=True)
 
     if args.only_force:
         filenames = {filename: attrs for filename, attrs in filenames.items()
@@ -196,32 +202,50 @@ async def async_run(args: argparse.Namespace) -> int:
         filename for filename, attrs in filenames.items()
         if FileStatus.COMMENT in attrs.status and filename in files_updated_set
     ])
-    if files_with_comments:
+    files_imports_changed: list[str] = []
+    for file_, attrs in (await async_load_files(args, files_updated_set, check_comments=False)).items():
+        import_diff = filenames[file_].imports.difference(attrs.imports)
+        for import_ in import_diff:
+            if not import_.startswith('typing'):
+                files_imports_changed.append(file_)
+                break
+    files_imports_changed = sorted(files_imports_changed)
+    files_no_automatic_update = set(files_with_comments + files_imports_changed)
+
+    if files_no_automatic_update:
         if args.force or args.only_force:
             print("Force mode selected!")
             print("Make sure to double check:")
             for file_ in files_with_comments:
                 print(f" - {file_}")
+            if files_with_comments and files_imports_changed:
+                print(" --")
+            for file_ in files_imports_changed:
+                print(f" - {file_}")
         else:
             print("Could not update all files, check:")
             for file_ in files_with_comments:
                 print(f" - {file_}")
-            await async_restore_files(files_with_comments)
+            if files_with_comments and files_imports_changed:
+                print(" --")
+            for file_ in files_imports_changed:
+                print(f" - {file_}")
+            await async_restore_files(files_no_automatic_update)
 
     print("---")
     print(f"All files: {len(filenames)}")
     print(f"No changes: {len(files_no_changes)}")
-    print(f"Files updated: {len(files_updated) - len(files_with_comments)}")
-    print(f"Files (no automatic update): {len(files_with_comments)}")
+    print(f"Files updated: {len(files_updated) - len(files_no_automatic_update)}")
+    print(f"Files (no automatic update): {len(files_no_automatic_update)}")
 
     if (
-        not files_with_comments
+        not files_no_automatic_update
         and not args.force
         and not args.only_force
         and args.verbose == 0
     ):
         return 0
-    if files_with_comments:
+    if files_no_automatic_update:
         return 2
     if args.verbose > 0:
         return 12

@@ -31,6 +31,10 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Max number of files that should be changed. No performance improvement!",
     )
     parser.add_argument(
+        '--concurrent-files', type=int, default=100,
+        help="Number of files to process concurrently during initial load. (default: %(default)s)"
+    )
+    parser.add_argument(
         '--full-reorder',
         action='store_true',
         help="Add version_str to 'reorder-python-import' args",

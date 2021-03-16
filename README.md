@@ -66,6 +66,9 @@ Always print verbose logging.
 Max number of files that should be changed. No performance improvements,
 since the limit is only applied **after** all files have been processed.
 
+**`--concurrent-files`**  
+Number of files to process concurrently during initial load.
+
 **`--full-reorder`**  
 Use additional options from [python-reorder-imports][pri] to rewrite
 - `--py38-plus` (default): Imports from `mypy_extensions` and `typing_extensions` when possible.
