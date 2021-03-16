@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import io
 
 import pytest
 
 from python_typing_update.const import FileStatus
-from python_typing_update.utils import check_comment_between_imports
+from python_typing_update.utils import (
+    check_comment_between_imports, list_imports)
 
 
 @pytest.mark.parametrize(
@@ -281,3 +284,78 @@ from typing import Any
 def test_comment_detection_ignore_comment(code: str, return_value: FileStatus):
     fp = io.StringIO(code)
     assert check_comment_between_imports(fp) == return_value
+
+
+@pytest.mark.parametrize(
+    ('code', 'import_set'),
+    (
+        pytest.param(
+            """
+var = 42
+import logging
+""",
+            set(),
+            id="import_not_in_main_block",
+        ),
+        pytest.param(
+            """
+\"\"\"Long comment\"\"\"
+# another comment
+import logging
+import logging.handlers
+from logging import DEBUG
+from logging import INFO, WARNING
+""",
+            {"logging", "logging.handlers", "logging.DEBUG", "logging.INFO", "logging.WARNING"},
+            id="absolute_imports",
+        ),
+        pytest.param(
+            """
+from .const import MY_CONST
+""",
+            {".const.MY_CONST"},
+            id="relative_import",
+        ),
+        pytest.param(
+            """
+import logging as LOG
+from logging import ERROR as ER
+""",
+            {"logging", "logging.ERROR"},
+            id="import_with_re-export",
+        ),
+        pytest.param(
+            """
+import logging, sys
+from logging import (
+    DEBUG,
+    INFO,
+)
+""",
+            {"logging", "logging.DEBUG", "logging.INFO", "sys"},
+            id="multiple_imports",
+        ),
+        pytest.param(
+            """
+import logging, \
+    sys
+from logging import DEBUG \
+    , INFO
+""",
+            {"logging", "logging.DEBUG", "logging.INFO", "sys"},
+            id="multiple_import_2",
+        ),
+        pytest.param(
+            """
+import logging  # comment
+from logging import (  # comment
+    INFO)
+""",
+            {"logging", "logging.INFO"},
+            id="imports_with_comments",
+        ),
+    )
+)
+def test_list_imports(code: str, import_set: set[str]):
+    fp = io.StringIO(code)
+    assert list_imports(fp) == import_set
