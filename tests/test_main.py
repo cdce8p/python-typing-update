@@ -36,6 +36,7 @@ async def async_test_main(
     control: str,
     argv: list[str] | None,
     returncode: int,
+    capsys: CaptureFixture | None = None,
 ):
     filename = FIXTURE_PATH + filename
     control = FIXTURE_PATH + control
@@ -45,8 +46,11 @@ async def async_test_main(
         argv.append("--disable-committed-check")
     argv.append(filename)
     async with async_restore_fixtures([filename]):
-        assert returncode == await async_main(argv)
+        ret = await async_main(argv)
+        assert returncode == ret
         await async_check_changes(filename, control)
+    if ret in (1, 2) and capsys:
+        assert filename in capsys.readouterr().out
 
 
 @pytest.mark.asyncio
@@ -100,8 +104,9 @@ async def test_main(
     control: str,
     argv: list[str] | None,
     returncode: int,
+    capsys: CaptureFixture,
 ):
-    await async_test_main(filename, control, argv, returncode)
+    await async_test_main(filename, control, argv, returncode, capsys)
 
 
 @pytest.mark.asyncio
@@ -203,8 +208,7 @@ async def test_main_comment(
     returncode: int,
     capsys: CaptureFixture,
 ):
-    await async_test_main(filename, control, argv, returncode)
-    assert filename in capsys.readouterr().out
+    await async_test_main(filename, control, argv, returncode, capsys)
 
 
 @pytest.mark.asyncio
