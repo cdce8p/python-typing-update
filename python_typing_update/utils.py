@@ -115,7 +115,7 @@ def check_comment_between_imports(fp: TextIO) -> FileStatus:
     return FileStatus.CLEAR
 
 
-def list_imports(fp: TextIO) -> set[str]:
+def extract_imports(fp: TextIO) -> set[str]:
     """Create set of all imports in main import block."""
     flag_in_import_block: bool = False
     flag_relative_import: bool | None = None

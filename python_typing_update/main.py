@@ -21,7 +21,7 @@ from pyupgrade._main import main as pyupgrade_main
 from .const import FileAttributes, FileStatus
 from .utils import (
     async_check_uncommitted_changes, async_restore_files,
-    check_comment_between_imports, check_files_exist, list_imports)
+    check_comment_between_imports, check_files_exist, extract_imports)
 
 logger = logging.getLogger("typing-update")
 
@@ -115,9 +115,11 @@ async def async_load_files(
     filenames: Iterable[str], *,
     check_comments: bool,
 ) -> dict[str, FileAttributes]:
+    """Process files from file list."""
     active_tasks: int = 0
 
     async def async_load_file(filename: str) -> tuple[str, FileAttributes]:
+        """Load file into memory and perform token analysis."""
         nonlocal active_tasks
         while active_tasks > args.concurrent_files:
             await asyncio.sleep(0)
@@ -126,7 +128,7 @@ async def async_load_files(
             data = await fp.read()
         file_status = check_comment_between_imports(io.StringIO(data)) \
             if check_comments is True else FileStatus.CLEAR
-        imports_set = list_imports(io.StringIO(data))
+        imports_set = extract_imports(io.StringIO(data))
         active_tasks -= 1
         return filename, FileAttributes(file_status, imports_set)
 

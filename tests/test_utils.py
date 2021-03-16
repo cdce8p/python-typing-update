@@ -6,7 +6,7 @@ import pytest
 
 from python_typing_update.const import FileStatus
 from python_typing_update.utils import (
-    check_comment_between_imports, list_imports)
+    check_comment_between_imports, extract_imports)
 
 
 @pytest.mark.parametrize(
@@ -358,4 +358,4 @@ from logging import (  # comment
 )
 def test_list_imports(code: str, import_set: set[str]):
     fp = io.StringIO(code)
-    assert list_imports(fp) == import_set
+    assert extract_imports(fp) == import_set
