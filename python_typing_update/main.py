@@ -6,19 +6,21 @@ from __future__ import annotations
 import argparse
 import asyncio
 import builtins
+import io
 import logging
 from functools import partial
 from io import StringIO
 
+import aiofiles
 import reorder_python_imports
 from autoflake import _main as autoflake_main
 from isort.main import main as isort_main
 from pyupgrade._main import main as pyupgrade_main
 
-from .const import FileStatus
+from .const import FileAttributes, FileStatus
 from .utils import (
     async_check_uncommitted_changes, async_restore_files,
-    check_comment_between_imports, check_files_exist)
+    check_comment_between_imports, check_files_exist, list_imports)
 
 logger = logging.getLogger("typing-update")
 
@@ -107,6 +109,25 @@ async def typing_update(
     return 0, filename
 
 
+async def async_load_files(filenames: list[str]) -> dict[str, FileAttributes]:
+    active_tasks: int = 0
+
+    async def async_load_file(filename: str) -> tuple[str, FileAttributes]:
+        nonlocal active_tasks
+        while active_tasks > 20:
+            await asyncio.sleep(0)
+        active_tasks += 1
+        async with aiofiles.open(filename, encoding="utf-8") as fp:
+            data = await fp.read()
+        flag_comments = check_comment_between_imports(io.StringIO(data))
+        imports_set = list_imports(io.StringIO(data))
+        active_tasks -= 1
+        return filename, FileAttributes(flag_comments, imports_set)
+
+    results = await asyncio.gather(*[async_load_file(file_) for file_ in filenames])
+    return dict(results)
+
+
 async def async_run(args: argparse.Namespace) -> int:
     """Update Python typing syntax.
 
@@ -129,15 +150,11 @@ async def async_run(args: argparse.Namespace) -> int:
         print("Abort! Commit all changes to '.py' files before running again.")
         return 11
 
-    filenames: dict[str, FileStatus] = {}
-    for filename in args.filenames:
-        with open(filename) as fp:
-            result = check_comment_between_imports(fp)
-            filenames[filename] = result
+    filenames: dict[str, FileAttributes] = await async_load_files(args.filenames)
 
     if args.only_force:
-        filenames = {filename: file_status for filename, file_status in filenames.items()
-                     if file_status != FileStatus.CLEAR}
+        filenames = {filename: attrs for filename, attrs in filenames.items()
+                     if attrs.status != FileStatus.CLEAR}
 
     loop = asyncio.get_running_loop()
     files_updated: list[str] = []
@@ -148,7 +165,7 @@ async def async_run(args: argparse.Namespace) -> int:
     builtins.print = lambda *args, **kwargs: None
 
     return_values = await asyncio.gather(
-        *[typing_update(loop, filename, args, file_status) for filename, file_status in filenames.items()])
+        *[typing_update(loop, filename, args, attrs.status) for filename, attrs in filenames.items()])
     for status, filename in return_values:
         if status == 0:
             files_updated.append(filename)
@@ -176,8 +193,8 @@ async def async_run(args: argparse.Namespace) -> int:
 
     files_updated_set: set[str] = set(files_updated)
     files_with_comments = sorted([
-        filename for filename, file_status in filenames.items()
-        if FileStatus.COMMENT in file_status and filename in files_updated_set
+        filename for filename, attrs in filenames.items()
+        if FileStatus.COMMENT in attrs.status and filename in files_updated_set
     ])
     if files_with_comments:
         if args.force or args.only_force:
