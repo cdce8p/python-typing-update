@@ -1,6 +1,6 @@
 # Python typing update
 
-Small tool to update Python typing syntax.
+Tool to update Python typing syntax.
 It uses token analysis and
 - [python-reorder-imports][pri]
 - [pyupgrade][pyu]
@@ -92,7 +92,7 @@ Check `git diff` before committing!
 Set the minimum Python syntax to **3.9**. (Default: **3.8**)
 
 **`--py310-plus`**  
-Set the minimum Python syntax to **3.10**. (Default: **3.10**)
+Set the minimum Python syntax to **3.10**. (Default: **3.8**)
 
 
 ## License
