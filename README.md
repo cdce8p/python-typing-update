@@ -1,7 +1,7 @@
 # Python typing update
 
 Small tool to update Python typing syntax.
-It uses
+It uses token analysis and
 - [python-reorder-imports][pri]
 - [pyupgrade][pyu]
 - [isort][isort]
