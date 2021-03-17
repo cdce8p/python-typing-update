@@ -7,7 +7,7 @@ from enum import Flag, auto
 from typing import NamedTuple
 
 version = (0, 2, 0)
-dev_version = 1
+dev_version = None
 
 version_str = '.'.join(map(str, version))
 if dev_version is not None:
