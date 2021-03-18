@@ -83,12 +83,12 @@ async def async_test_main(
             id="check_no_changes",
         ),
         pytest.param(
-            'changed.py', 'changed_fixed.py',
+            'changed.py', 'changed_full_reorder_38.py',
             ['--full-reorder', '--py38-plus'], 0,
             id="full_reorder_38",
         ),
         pytest.param(
-            'changed.py', 'changed_full_reorder.py',
+            'changed.py', 'changed_full_reorder_39.py',
             ['--full-reorder', '--py39-plus'], 0,
             id="full_reorder_39",
         ),
