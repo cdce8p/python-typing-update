@@ -441,3 +441,28 @@ async def test_main_unused_import_comment(
     capsys: CaptureFixture,
 ):
     await async_test_main(filename, control, argv, returncode, capsys)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
+        pytest.param(
+            'keep_updates.py', 'keep_updates_no_change.py',
+            None, 0,
+            id="no_import_removed",
+        ),
+        pytest.param(
+            'keep_updates.py', 'keep_updates_fixed.py',
+            ['--keep-updates'], 0,
+            id="keep_updates",
+        ),
+    )
+)
+async def test_main_keep_updates(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+):
+    await async_test_main(filename, control, argv, returncode)

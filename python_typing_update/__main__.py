@@ -55,6 +55,11 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Add version_str to 'reorder-python-import' args",
     )
     parser.add_argument(
+        '--keep-updates',
+        action='store_true',
+        help="Keep updates even if no import was removed",
+    )
+    parser.add_argument(
         '--black',
         action='store_true',
         help="Run black formatting after update",

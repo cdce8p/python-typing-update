@@ -74,7 +74,11 @@ async def typing_update(
             None, autoflake_partial,
             [None, '-c', filename],
         )
-        if not args.full_reorder and FileStatus.COMMENT_TYPING not in file_status:
+        if (
+            args.keep_updates is False
+            and args.full_reorder is False
+            and FileStatus.COMMENT_TYPING not in file_status
+        ):
             # -> No unused imports, revert changes
             return 2, filename
     except SystemExit:
