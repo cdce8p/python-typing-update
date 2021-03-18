@@ -109,6 +109,14 @@ async def async_main(argv: list[str] | None = None) -> int:
     if args.verbose > 0:
         logger.setLevel(logging.DEBUG)
 
+    if args.black is True:
+        try:
+            # pylint: disable=unused-import,import-outside-toplevel
+            import black  # noqa: F401
+        except ImportError:
+            print("Error! Black is not installed")
+            return 2
+
     return await async_run(args)
 
 

@@ -33,7 +33,7 @@ and revert all changes to the file. This can be overwritten by using `--force`.
    unused. If not, revert changes with `git restore`.
 4. Remove unused imports with [autoflake][autoflake].
 5. Run [isort][isort] to try to restore the previous formatting.
-6. Optional: Run [black][black]
+6. Optional: Run [black][black]. (Requires `black` to be added as `additional_dependency`)
 7. Check `git diff` for modified comments.
    If one is detected, revert changes and print file name.
    Can be overwritten with `--force`.
@@ -78,7 +78,13 @@ Use additional options from [python-reorder-imports][pri] to rewrite
 Keep updates even if no import was removed. Use with caution, might result in more errors.
 
 **`--black`**  
-Run `black` formatting after updates.
+Run `black` formatting after updates.  
+To use it, add `black` as `additional_dependency` in your `.pre-commit-config.yaml`.
+
+```yaml
+        additional_dependencies:
+          - black==<insert current version here!>
+```
 
 **`--disable-committed-check`**  
 Don't abort with uncommitted changes. **Don't use it in production!**
