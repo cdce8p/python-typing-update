@@ -1,6 +1,6 @@
 # Python typing update
 
-Small tool to update Python typing syntax.
+Tool to update Python typing syntax.
 It uses token analysis and
 - [python-reorder-imports][pri]
 - [pyupgrade][pyu]
@@ -33,7 +33,7 @@ and revert all changes to the file. This can be overwritten by using `--force`.
    unused. If not, revert changes with `git restore`.
 4. Remove unused imports with [autoflake][autoflake].
 5. Run [isort][isort] to try to restore the previous formatting.
-6. Optional: Run [black][black]
+6. Optional: Run [black][black]. (Requires `black` to be added as `additional_dependency`)
 7. Check `git diff` for modified comments.
    If one is detected, revert changes and print file name.
    Can be overwritten with `--force`.
@@ -74,8 +74,24 @@ Use additional options from [python-reorder-imports][pri] to rewrite
 - `--py38-plus` (default): Imports from `mypy_extensions` and `typing_extensions` when possible.
 - `--py39-plus`: Rewrite [PEP 585][PEP585] typing imports. Additionally `typing.Hashable` and `typing.Sized` will also be replace by their `collections.abc` equivalents.
 
+**`--keep-updates`**  
+Keep updates even if no import was removed. Use with caution, might result in more errors.
+
 **`--black`**  
-Run `black` formatting after updates.
+Run `black` formatting after updates.  
+To use it, add `black` as `additional_dependency` in your `.pre-commit-config.yaml`.
+
+```yaml
+        additional_dependencies:
+          - black==<insert current version here!>
+```
+
+**`--disable-committed-check`**  
+Don't abort with uncommitted changes. **Don't use it in production!**
+Risk of losing uncommitted changes.
+
+
+### Different mode options
 
 **`--check`**  
 Check if files would be modified. Return with exitcode `1` or `0` if not. Useful for CI runs.
@@ -88,11 +104,17 @@ Check `git diff` before committing!
 Only update files which are likely to require extra work.
 Check `git diff` before committing!
 
+
+### Python version options
+
+**`--py38-plus`**  
+Set the minimum Python syntax version to **3.8**. This is the default.
+
 **`--py39-plus`**  
-Set the minimum Python syntax to **3.9**. (Default: **3.8**)
+Set the minimum Python syntax version to **3.9**. (Default: **3.8**)
 
 **`--py310-plus`**  
-Set the minimum Python syntax to **3.10**. (Default: **3.10**)
+Set the minimum Python syntax version to **3.10**. (Default: **3.8**)
 
 
 ## License

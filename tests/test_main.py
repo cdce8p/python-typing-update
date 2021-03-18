@@ -83,12 +83,12 @@ async def async_test_main(
             id="check_no_changes",
         ),
         pytest.param(
-            'changed.py', 'changed_fixed.py',
+            'changed.py', 'changed_full_reorder_38.py',
             ['--full-reorder', '--py38-plus'], 0,
             id="full_reorder_38",
         ),
         pytest.param(
-            'changed.py', 'changed_full_reorder.py',
+            'changed.py', 'changed_full_reorder_39.py',
             ['--full-reorder', '--py39-plus'], 0,
             id="full_reorder_39",
         ),
@@ -441,3 +441,28 @@ async def test_main_unused_import_comment(
     capsys: CaptureFixture,
 ):
     await async_test_main(filename, control, argv, returncode, capsys)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('filename', 'control', 'argv', 'returncode'),
+    (
+        pytest.param(
+            'keep_updates.py', 'keep_updates_no_change.py',
+            None, 0,
+            id="no_import_removed",
+        ),
+        pytest.param(
+            'keep_updates.py', 'keep_updates_fixed.py',
+            ['--keep-updates'], 0,
+            id="keep_updates",
+        ),
+    )
+)
+async def test_main_keep_updates(
+    filename: str,
+    control: str,
+    argv: list[str] | None,
+    returncode: int,
+):
+    await async_test_main(filename, control, argv, returncode)
