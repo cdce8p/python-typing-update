@@ -29,6 +29,9 @@ async def async_main(argv: list[str] | None = None) -> int:
         description="Tool to update Python typing syntax.",
         formatter_class=CustomHelpFormatter,
     )
+    mode_options = parser.add_argument_group("select different mode")
+    py_version_options = parser.add_argument_group("python version options")
+
     parser.add_argument(
         '-v', '--verbose',
         action='count', default=0,
@@ -52,18 +55,22 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Add version_str to 'reorder-python-import' args",
     )
     parser.add_argument(
+        '--keep-updates',
+        action='store_true',
+        help="Keep updates even if no import was removed",
+    )
+    parser.add_argument(
         '--black',
         action='store_true',
         help="Run black formatting after update",
     )
     parser.add_argument(
         '--disable-committed-check',
-        action='store_true', help=argparse.SUPPRESS,
-        # Don't abort with uncommited changes
-        # Use for testing only!
+        action='store_true',
+        help="Don't abort with uncommited changes. Don't use it in production!",
     )
 
-    group1 = parser.add_mutually_exclusive_group()
+    group1 = mode_options.add_mutually_exclusive_group()
     group1.add_argument(
         '--check',
         action='store_true',
@@ -80,10 +87,11 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Only update files which are likely to require extra work",
     )
 
-    group2 = parser.add_mutually_exclusive_group()
+    group2 = py_version_options.add_mutually_exclusive_group()
     group2.add_argument(
         '--py38-plus',
         action='store_const', dest='min_version', default=(3, 8), const=(3, 8),
+        help="Default"
     )
     group2.add_argument(
         '--py39-plus',
@@ -100,6 +108,14 @@ async def async_main(argv: list[str] | None = None) -> int:
     logging.basicConfig()
     if args.verbose > 0:
         logger.setLevel(logging.DEBUG)
+
+    if args.black is True:
+        try:
+            # pylint: disable=unused-import,import-outside-toplevel
+            import black  # noqa: F401
+        except ImportError:
+            print("Error! Black is not installed")
+            return 2
 
     return await async_run(args)
 
