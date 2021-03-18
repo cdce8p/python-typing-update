@@ -88,11 +88,14 @@ Check `git diff` before committing!
 Only update files which are likely to require extra work.
 Check `git diff` before committing!
 
+**`--py38-plus`**  
+Set the minimum Python syntax version to **3.8**. This is the default.
+
 **`--py39-plus`**  
-Set the minimum Python syntax to **3.9**. (Default: **3.8**)
+Set the minimum Python syntax version to **3.9**. (Default: **3.8**)
 
 **`--py310-plus`**  
-Set the minimum Python syntax to **3.10**. (Default: **3.8**)
+Set the minimum Python syntax version to **3.10**. (Default: **3.8**)
 
 
 ## License
