@@ -70,34 +70,34 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Don't abort with uncommited changes. Don't use it in production!",
     )
 
-    group1 = mode_options.add_mutually_exclusive_group()
-    group1.add_argument(
+    group_mode = mode_options.add_mutually_exclusive_group()
+    group_mode.add_argument(
         '--check',
         action='store_true',
         help="Check if files would be updated",
     )
-    group1.add_argument(
+    group_mode.add_argument(
         '--force',
         action='store_true',
         help="Update all files. Double check changes afterwards!",
     )
-    group1.add_argument(
+    group_mode.add_argument(
         '--only-force',
         action='store_true',
         help="Only update files which are likely to require extra work",
     )
 
-    group2 = py_version_options.add_mutually_exclusive_group()
-    group2.add_argument(
+    group_py_version = py_version_options.add_mutually_exclusive_group()
+    group_py_version.add_argument(
         '--py38-plus',
         action='store_const', dest='min_version', default=(3, 8), const=(3, 8),
         help="Default"
     )
-    group2.add_argument(
+    group_py_version.add_argument(
         '--py39-plus',
         action='store_const', dest='min_version', const=(3, 9),
     )
-    group2.add_argument(
+    group_py_version.add_argument(
         '--py310-plus',
         action='store_const', dest='min_version', const=(3, 10),
     )
@@ -109,7 +109,7 @@ async def async_main(argv: list[str] | None = None) -> int:
     if args.verbose > 0:
         logger.setLevel(logging.DEBUG)
 
-    if args.black is True:
+    if args.black:
         try:
             # pylint: disable=unused-import,import-outside-toplevel
             import black  # noqa: F401
