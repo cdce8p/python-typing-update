@@ -29,6 +29,9 @@ async def async_main(argv: list[str] | None = None) -> int:
         description="Tool to update Python typing syntax.",
         formatter_class=CustomHelpFormatter,
     )
+    mode_options = parser.add_argument_group("select different mode")
+    py_version_options = parser.add_argument_group("python version options")
+
     parser.add_argument(
         '-v', '--verbose',
         action='count', default=0,
@@ -62,7 +65,7 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Don't abort with uncommited changes. Don't use it in production!",
     )
 
-    group1 = parser.add_mutually_exclusive_group()
+    group1 = mode_options.add_mutually_exclusive_group()
     group1.add_argument(
         '--check',
         action='store_true',
@@ -79,10 +82,11 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Only update files which are likely to require extra work",
     )
 
-    group2 = parser.add_mutually_exclusive_group()
+    group2 = py_version_options.add_mutually_exclusive_group()
     group2.add_argument(
         '--py38-plus',
         action='store_const', dest='min_version', default=(3, 8), const=(3, 8),
+        help="Default"
     )
     group2.add_argument(
         '--py39-plus',

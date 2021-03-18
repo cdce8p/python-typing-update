@@ -81,6 +81,9 @@ Run `black` formatting after updates.
 Don't abort with uncommitted changes. **Don't use it in production!**
 Risk of losing uncommitted changes.
 
+
+### Different mode options
+
 **`--check`**  
 Check if files would be modified. Return with exitcode `1` or `0` if not. Useful for CI runs.
 
@@ -91,6 +94,9 @@ Check `git diff` before committing!
 **`--only-force`**  
 Only update files which are likely to require extra work.
 Check `git diff` before committing!
+
+
+### Python version options
 
 **`--py38-plus`**  
 Set the minimum Python syntax version to **3.8**. This is the default.
