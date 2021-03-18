@@ -58,9 +58,8 @@ async def async_main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         '--disable-committed-check',
-        action='store_true', help=argparse.SUPPRESS,
-        # Don't abort with uncommited changes
-        # Use for testing only!
+        action='store_true',
+        help="Don't abort with uncommited changes. Don't use it in production!",
     )
 
     group1 = parser.add_mutually_exclusive_group()

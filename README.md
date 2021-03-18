@@ -77,6 +77,10 @@ Use additional options from [python-reorder-imports][pri] to rewrite
 **`--black`**  
 Run `black` formatting after updates.
 
+**`--disable-committed-check`**  
+Don't abort with uncommitted changes. **Don't use it in production!**
+Risk of losing uncommitted changes.
+
 **`--check`**  
 Check if files would be modified. Return with exitcode `1` or `0` if not. Useful for CI runs.
 
