@@ -148,7 +148,7 @@ async def async_run(args: argparse.Namespace) -> int:
         1: Check did not pass, files would be updated
         2: Couldn't update all files
         10: At least one file doesn't exist
-        11: Uncommited changes in '.py' files
+        11: Uncommitted changes in '.py' files
         12: Debug mode
     """
     if file_errors := check_files_exist(args.filenames):
