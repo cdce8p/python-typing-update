@@ -12,7 +12,7 @@ repos:
         files: ^(python_typing_update|script|tests)/.+\.py$
         exclude: *fixtures
   - repo: https://github.com/PyCQA/isort
-    rev: 5.7.0
+    rev: 5.8.0
     hooks:
       - id: isort
         exclude:  *fixtures
