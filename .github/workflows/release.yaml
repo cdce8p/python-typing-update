@@ -3,7 +3,7 @@ name: Release
 on:
   release:
     types:
-      - created
+      - published
 
 env:
   DEFAULT_PYTHON: 3.9
