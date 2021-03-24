@@ -12,8 +12,8 @@ It uses token analysis and
 to try and update the typing syntax the best it can.
 
 **Important**  
-Since every project uses a different formatting style,
-always check `git diff` before committing any changes!  
+Every project uses a different formatting style,
+so always check `git diff` before comitting any changes!
 Since this tool uses [pyupgrade][pyu], it's best used for
 projects that use it already.
 
@@ -119,7 +119,7 @@ Set the minimum Python syntax version to **3.10**. (Default: **3.8**)
 
 ## License
 This Project is licensed under the MIT license.
-See [LICENSE](LICENSE) for the full license text.
+See [LICENSE][LICENSE_FILE] for the full license text.
 
 
 [pri]: https://github.com/asottile/reorder_python_imports
@@ -129,3 +129,5 @@ See [LICENSE](LICENSE) for the full license text.
 [black]: https://github.com/psf/black
 [PEP585]: https://www.python.org/dev/peps/pep-0585/
 [PEP604]: https://www.python.org/dev/peps/pep-0604/
+
+[LICENSE_FILE]: https://github.com/cdce8p/python-typing-update/blob/main/LICENSE
