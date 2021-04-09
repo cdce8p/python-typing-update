@@ -6,7 +6,7 @@
         {
             "label": "Build package",
             "type": "shell",
-            "command": "rm -rf build dist *.egg-info; source venv/bin/activate; python setup.py sdist bdist_wheel",
+            "command": "rm -rf build dist *.egg-info; ${command:python.interpreterPath} setup.py sdist bdist_wheel",
             "group": {
                 "kind": "build",
                 "isDefault": true,
