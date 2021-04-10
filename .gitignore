@@ -179,4 +179,5 @@ Thumbs.db
 
 # -----
 # Custom / Overwrites
+!.vscode/settings.default.json
 .vscode/settings.json

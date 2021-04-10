@@ -6,6 +6,8 @@ updates:
       interval: "daily"
     labels:
       - "dependency"
+    assignees:
+      - "cdce8p"
     open-pull-requests-limit: 10
 
   - package-ecosystem: "github-actions"
@@ -14,4 +16,6 @@ updates:
       interval: "weekly"
     labels:
       - "dependency"
+    assignees:
+      - "cdce8p"
     open-pull-requests-limit: 10
