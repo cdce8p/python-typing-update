@@ -1,15 +1,17 @@
 [MASTER]
 ignore=
+load-plugins =
+    pylint.extensions.typing,
 
 [BASIC]
-good-names=
+good-names =
     i,j,k,_,fp,it,ex,logger
 
 [MESSAGE CONTROL]
 # Reasons disabled:
 # superfluous-parens - used with :=
 # duplicate-code - for scripts acceptable
-disable=
+disable =
     superfluous-parens,
     missing-module-docstring,
     missing-class-docstring,
@@ -25,7 +27,11 @@ disable=
     duplicate-code,
 
 [FORMAT]
-max-line-length=119
+max-line-length = 119
 
 [REPORTS]
 score = no
+
+[TYPING]
+py-version = 3.8
+runtime-typing = no
