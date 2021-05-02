@@ -15,15 +15,8 @@ def load_requirements_file(filename: str) -> list[str]:
 
 setup(
     version=version_str,
-    packages=['python_typing_update'],
-    python_requires='>=3.8, <3.10',
     install_requires=load_requirements_file('requirements.txt'),
     extras_require={
         'black': load_requirements_file('requirements_black.txt'),
-    },
-    entry_points={
-        'console_scripts': [
-            'python-typing-update = python_typing_update.__main__:main',
-        ],
     },
 )
