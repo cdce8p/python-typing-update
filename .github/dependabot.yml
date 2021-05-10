@@ -9,6 +9,7 @@ updates:
     assignees:
       - "cdce8p"
     open-pull-requests-limit: 10
+    rebase-strategy: "disabled"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -19,3 +20,4 @@ updates:
     assignees:
       - "cdce8p"
     open-pull-requests-limit: 10
+    rebase-strategy: "disabled"
