@@ -204,10 +204,10 @@ async def async_run(args: argparse.Namespace) -> int:
         return 0
 
     files_updated_set: set[str] = set(files_updated)
-    files_with_comments = sorted([
+    files_with_comments = sorted(
         filename for filename, attrs in filenames.items()
         if FileStatus.COMMENT in attrs.status and filename in files_updated_set
-    ])
+    )
     files_imports_changed: list[str] = []
     for file_, attrs in (await async_load_files(args, files_updated_set, check_comments=False)).items():
         import_diff = filenames[file_].imports.difference(attrs.imports)
