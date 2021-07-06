@@ -13,9 +13,7 @@ good-names =
 # duplicate-code - for scripts acceptable
 disable =
     superfluous-parens,
-    missing-module-docstring,
-    missing-class-docstring,
-    missing-function-docstring,
+    missing-docstring,
     too-many-instance-attributes,
     too-many-return-statements,
     too-many-locals,
