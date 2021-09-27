@@ -2,6 +2,8 @@
 ignore=
 load-plugins =
     pylint.extensions.typing,
+    pylint.extensions.code_style,
+py-version = 3.8
 
 [BASIC]
 good-names =
@@ -31,5 +33,4 @@ max-line-length = 119
 score = no
 
 [TYPING]
-py-version = 3.8
 runtime-typing = no
