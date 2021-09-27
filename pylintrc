@@ -34,3 +34,6 @@ score = no
 
 [TYPING]
 runtime-typing = no
+
+[CODE_STYLE]
+max-line-length-suggestions = 72
