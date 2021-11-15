@@ -1,3 +1,3 @@
 flake8==4.0.1
-isort==5.10.0
+isort==5.10.1
 pyupgrade==2.29.0
