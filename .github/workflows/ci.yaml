@@ -8,7 +8,7 @@ on:
   pull_request: ~
 
 env:
-  CACHE_VERSION: 102
+  CACHE_VERSION: 103
   DEFAULT_PYTHON: 3.8
   LIB_FOLDER: python_typing_update
   PRE_COMMIT_CACHE: ~/.cache/pre-commit
@@ -51,8 +51,6 @@ jobs:
           python -m venv venv
           . venv/bin/activate
           python -m pip install -U pip setuptools wheel
-          echo "Done"
-          pip install -U pip setuptools wheel
           pip install -U -r requirements_test.txt
           pip install -e .
       - name: Generate pre-commit restore key
