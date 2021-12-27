@@ -58,6 +58,8 @@ jobs:
           python -m pip -V
           python -Im ensurepip --upgrade --default-pip
           python -m pip install -U pip
+          python -m pip install -U pip setuptools wheel
+          echo "Done"
           pip install -U pip setuptools wheel
           pip install -U -r requirements_test.txt
           pip install -e .
