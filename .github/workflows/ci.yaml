@@ -46,10 +46,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ steps.python.outputs.python-version }}-base-venv-${{ env.CACHE_VERSION }}-
       - name: Create Python virtual environment
-        if: steps.cache-venv.outputs.cache-hit != 'true'
+        # if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
+          python -V
+          pip -V
           python -m venv venv
           . venv/bin/activate
+          echo "Venv activate"
+          python -V
+          pip -V
+          python -m pip -V
           pip install -U pip setuptools wheel
           pip install -U -r requirements_test.txt
           pip install -e .
