@@ -72,7 +72,7 @@ Number of files to process concurrently during initial load.
 **`--full-reorder`**  
 Use additional options from [python-reorder-imports][pri] to rewrite
 - `--py38-plus` (default): Imports from `mypy_extensions` and `typing_extensions` when possible.
-- `--py39-plus`: Rewrite [PEP 585][PEP585] typing imports. Additionally `typing.Hashable` and `typing.Sized` will also be replace by their `collections.abc` equivalents.
+- `--py39-plus`: Rewrite [PEP 585][PEP585] typing imports. Additionally `typing.Hashable` and `typing.Sized` will also be replaced by their `collections.abc` equivalents.
 
 **`--keep-updates`**  
 Keep updates even if no import was removed. Use with caution, might result in more errors.
