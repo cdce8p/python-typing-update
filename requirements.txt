@@ -2,4 +2,4 @@ aiofiles==0.8.0
 autoflake==1.4
 isort==5.10.1
 pyupgrade==2.31.0
-reorder-python-imports==2.7.1
+reorder-python-imports==3.0.1
