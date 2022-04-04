@@ -4,4 +4,4 @@ pre-commit==2.17.0
 pylint==2.13.4
 pytest==7.1.1
 pytest-asyncio==0.16.0
-types-aiofiles==0.8.5
+types-aiofiles==0.8.6
