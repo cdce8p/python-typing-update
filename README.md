@@ -107,6 +107,9 @@ Check `git diff` before committing!
 
 ### Python version options
 
+**`--py37-plus`**
+Set the minimum Python syntax version to **3.7**. (Default: **3.8**)
+
 **`--py38-plus`**  
 Set the minimum Python syntax version to **3.8**. This is the default.
 
