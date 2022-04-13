@@ -4,11 +4,11 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Iterable
 import os
+from pathlib import Path
 import token
 import tokenize
-from collections.abc import Iterable
-from pathlib import Path
 from typing import TextIO
 
 from .const import FileStatus

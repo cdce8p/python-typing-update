@@ -3,9 +3,9 @@ from __future__ import annotations
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+from _pytest.capture import CaptureFixture
 import aiofiles
 import pytest
-from _pytest.capture import CaptureFixture
 
 from python_typing_update.__main__ import async_main
 from python_typing_update.utils import async_restore_files
