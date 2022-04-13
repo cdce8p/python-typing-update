@@ -109,6 +109,28 @@ async def test_main(
 
 
 @pytest.mark.parametrize(
+    ('argv',),
+    (
+        pytest.param(['--py37-plus']),
+        pytest.param(['--py38-plus']),
+        pytest.param(['--py39-plus']),
+        pytest.param(['--py310-plus']),
+    ),
+)
+async def test_py_version(
+    argv: list[str] | None,
+    capsys: CaptureFixture,
+) -> None:
+    await async_test_main(
+        filename='no_changes.py',
+        control='no_changes_no_change.py',
+        argv=argv,
+        returncode=0,
+        capsys=capsys,
+    )
+
+
+@pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
         pytest.param(
