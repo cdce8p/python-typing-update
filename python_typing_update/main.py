@@ -9,11 +9,11 @@ import builtins
 from collections.abc import Iterable
 from functools import partial
 import io
-from io import StringIO
+from io import BytesIO
 import logging
 
 import aiofiles
-from autoflake import _main as autoflake_main
+from autoflake8.cli import _main as autoflake_main
 from isort.main import main as isort_main
 from pyupgrade._main import main as pyupgrade_main
 import reorder_python_imports
@@ -38,8 +38,14 @@ async def typing_update(
         - 0, filename: file was updated
         - 2, filename: if not typing update is necessary
     """
-    null_file = StringIO()
-    autoflake_partial = partial(autoflake_main, standard_out=null_file, standard_error=null_file)
+    null_file = BytesIO()
+    logger_autoflake8 = logging.getLogger("autoflake8")
+    autoflake8_partial = partial(
+        autoflake_main,
+        stdout=null_file,
+        stdin=null_file,
+        logger=logger_autoflake8,
+    )
     version_string = f"--py{''.join(map(str, args.min_version))}-plus"
 
     # Add, replace and reorder imports
@@ -69,29 +75,24 @@ async def typing_update(
         return 2, filename
 
     # Check for unused imports (autoflake)
-    try:
-        await loop.run_in_executor(
-            None, autoflake_partial,
-            [None, '-c', filename],
-        )
-        if (
-            args.keep_updates is False
-            and args.full_reorder is False
-            and FileStatus.COMMENT_TYPING not in file_status
-        ):
-            # -> No unused imports, revert changes
-            return 2, filename
-    except SystemExit:
-        pass
+    status_autoflake8 = await loop.run_in_executor(
+        None, autoflake8_partial,
+        [None, '-c', filename],
+    )
+    if (
+        status_autoflake8 == 0
+        and args.keep_updates is False
+        and args.full_reorder is False
+        and FileStatus.COMMENT_TYPING not in file_status
+    ):
+        # -> No unused imports, revert changes
+        return 2, filename
 
     # Remove unused imports (autoflake)
-    try:
-        await loop.run_in_executor(
-            None, autoflake_partial,
-            [None, '-i', filename],
-        )
-    except SystemExit:
-        pass
+    await loop.run_in_executor(
+        None, autoflake8_partial,
+        [None, '-i', filename],
+    )
 
     # Run isort
     try:
