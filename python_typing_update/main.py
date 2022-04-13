@@ -6,17 +6,17 @@ from __future__ import annotations
 import argparse
 import asyncio
 import builtins
-import io
-import logging
 from collections.abc import Iterable
 from functools import partial
+import io
 from io import StringIO
+import logging
 
 import aiofiles
-import reorder_python_imports
 from autoflake import _main as autoflake_main
 from isort.main import main as isort_main
 from pyupgrade._main import main as pyupgrade_main
+import reorder_python_imports
 
 from .const import FileAttributes, FileStatus
 from .utils import (
