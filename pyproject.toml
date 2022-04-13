@@ -20,3 +20,37 @@ norecursedirs = ["fixtures"]
 console_output_style = "count"
 log_level = "NOTSET"
 asyncio_mode = "auto"  # https://github.com/pytest-dev/pytest-asyncio#modes
+
+[tool.mypy]
+# https://mypy.readthedocs.io/en/stable/config_file.html
+python_version = 3.8
+show_error_codes = true
+ignore_missing_imports = true
+strict = true
+follow_imports = "normal"
+exclude = "tests/fixtures/.+\\.py"
+# Untyped definitions and calls
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+# None and optional handeling
+no_implicit_optional = true
+strict_optional = true
+# Configure warnings
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unused_configs = true
+# Misc
+implicit_reexport = false
+strict_equality = true
+enable_error_code = ["ignore-without-code"]
+# TODO
+allow_any_generics = true
+
+# [[tool.mypy.overrides]]
+# module = "tests.*"
+# # Untyped definitions and calls
+# disallow_untyped_calls = false
+# disallow_untyped_defs = false
+# disallow_incomplete_defs = false
