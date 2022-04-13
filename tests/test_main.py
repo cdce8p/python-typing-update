@@ -53,7 +53,6 @@ async def async_test_main(
         assert filename in capsys.readouterr().out
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -109,7 +108,6 @@ async def test_main(
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -145,7 +143,6 @@ async def test_main_type_alias(
     await async_test_main(filename, control, argv, returncode)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -211,7 +208,6 @@ async def test_main_comment(
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -256,7 +252,6 @@ async def test_main_comment_no_issue(
     await async_test_main(filename, control, argv, returncode)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -291,7 +286,6 @@ async def test_main_comment_import_no_issue(
     await async_test_main(filename, control, argv, returncode)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -367,7 +361,6 @@ async def test_main_unused_import(
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -443,7 +436,6 @@ async def test_main_unused_import_comment(
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
