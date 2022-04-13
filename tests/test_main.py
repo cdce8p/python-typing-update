@@ -3,9 +3,9 @@ from __future__ import annotations
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+from _pytest.capture import CaptureFixture
 import aiofiles
 import pytest
-from _pytest.capture import CaptureFixture
 
 from python_typing_update.__main__ import async_main
 from python_typing_update.utils import async_restore_files
@@ -13,7 +13,7 @@ from python_typing_update.utils import async_restore_files
 FIXTURE_PATH = "tests/fixtures/"
 
 
-async def async_check_changes(filename: str, control: str):
+async def async_check_changes(filename: str, control: str) -> None:
     async with aiofiles.open(filename, 'r') as fp:
         content_modified: str = await fp.read()
 
@@ -37,7 +37,7 @@ async def async_test_main(
     argv: list[str] | None,
     returncode: int,
     capsys: CaptureFixture | None = None,
-):
+) -> None:
     filename = FIXTURE_PATH + filename
     control = FIXTURE_PATH + control
     if argv is None:
@@ -53,7 +53,6 @@ async def async_test_main(
         assert filename in capsys.readouterr().out
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -97,7 +96,7 @@ async def async_test_main(
             ['-v'], 12,
             id="debug",
         ),
-    )
+    ),
 )
 async def test_main(
     filename: str,
@@ -105,11 +104,32 @@ async def test_main(
     argv: list[str] | None,
     returncode: int,
     capsys: CaptureFixture,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ('argv',),
+    (
+        pytest.param(['--py37-plus']),
+        pytest.param(['--py38-plus']),
+        pytest.param(['--py39-plus']),
+        pytest.param(['--py310-plus']),
+    ),
+)
+async def test_py_version(
+    argv: list[str] | None,
+    capsys: CaptureFixture,
+) -> None:
+    await async_test_main(
+        filename='no_changes.py',
+        control='no_changes_no_change.py',
+        argv=argv,
+        returncode=0,
+        capsys=capsys,
+    )
+
+
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -134,18 +154,17 @@ async def test_main(
             id="type_alias_pep604_310_updated",
             marks=pytest.mark.xfail(reason="Not implented in mypy + pyupgrade (yet)"),
         ),
-    )
+    ),
 )
 async def test_main_type_alias(
     filename: str,
     control: str,
     argv: list[str] | None,
     returncode: int,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -199,7 +218,7 @@ async def test_main_type_alias(
             ['--force'], 2,
             id="comment_5_forced",
         ),
-    )
+    ),
 )
 async def test_main_comment(
     filename: str,
@@ -207,11 +226,10 @@ async def test_main_comment(
     argv: list[str] | None,
     returncode: int,
     capsys: CaptureFixture,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -245,18 +263,17 @@ async def test_main_comment(
             None, 0,
             id="comment_no_issue_6",
         ),
-    )
+    ),
 )
 async def test_main_comment_no_issue(
     filename: str,
     control: str,
     argv: list[str] | None,
     returncode: int,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -280,18 +297,17 @@ async def test_main_comment_no_issue(
             None, 0,
             id="comment_import_no_issue_4",
         ),
-    )
+    ),
 )
 async def test_main_comment_import_no_issue(
     filename: str,
     control: str,
     argv: list[str] | None,
     returncode: int,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -355,7 +371,7 @@ async def test_main_comment_import_no_issue(
             ['--force'], 2,
             id="unused_import_8_forced",
         ),
-    )
+    ),
 )
 async def test_main_unused_import(
     filename: str,
@@ -363,11 +379,10 @@ async def test_main_unused_import(
     argv: list[str] | None,
     returncode: int,
     capsys: CaptureFixture,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -431,7 +446,7 @@ async def test_main_unused_import(
             ['--force'], 2,
             id="unused_import_comment_8_forced",
         ),
-    )
+    ),
 )
 async def test_main_unused_import_comment(
     filename: str,
@@ -439,11 +454,10 @@ async def test_main_unused_import_comment(
     argv: list[str] | None,
     returncode: int,
     capsys: CaptureFixture,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ('filename', 'control', 'argv', 'returncode'),
     (
@@ -457,12 +471,12 @@ async def test_main_unused_import_comment(
             ['--keep-updates'], 0,
             id="keep_updates",
         ),
-    )
+    ),
 )
 async def test_main_keep_updates(
     filename: str,
     control: str,
     argv: list[str] | None,
     returncode: int,
-):
+) -> None:
     await async_test_main(filename, control, argv, returncode)
