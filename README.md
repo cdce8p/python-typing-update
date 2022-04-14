@@ -17,10 +17,6 @@ so always check `git diff` before comitting any changes!
 Since this tool uses [pyupgrade][pyu], it's best used for
 projects that use it already.
 
-**Python 3.10**  
-This tool depends on `autoflake` which doesn't yet support Python 3.10.
-However, you can use `3.10` to update older Python syntax.
-
 
 ## Limitations
 Due to the way the tool works, it will reorder the imports multiple times.
