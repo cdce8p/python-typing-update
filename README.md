@@ -23,6 +23,16 @@ Due to the way the tool works, it will reorder the imports multiple times.
 By default the tool tries to detect if a comment was moved
 and revert all changes to the file. This can be overwritten by using `--force`.
 
+Currently, it's not possible to update aliases with a different name.
+In particular, these need to be updated manually:
+| Old typing name | New |
+| --------------- | --- |
+| `Deque` | `collections.deque` |
+| `DefaultDict` | `collections.defaultdict` |
+| `AbstractSet` | `collections.abc.Set` |
+| `ContextManager` | `contextlib.AbstractContextManager` |
+| `AsyncContextMananger` | `contextlib.AbstractAsyncContextManager` |
+
 
 ## How it works
 1. Run [python-reorder-import][pri] to add
