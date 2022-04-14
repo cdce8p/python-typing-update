@@ -12,6 +12,8 @@ jobs:
   release-pypi:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to upload release assets
     steps:
       - name: Check out code from Github
         uses: actions/checkout@v3.0.0
@@ -32,3 +34,9 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           twine upload --verbose dist/*
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
