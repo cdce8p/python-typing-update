@@ -39,7 +39,9 @@ async def typing_update(
         - 2, filename: if not typing update is necessary
     """
     null_file = StringIO()
-    autoflake_partial = partial(autoflake_main, standard_out=null_file, standard_error=null_file)
+    autoflake_partial: partial[int] = partial(
+        autoflake_main, standard_out=null_file, standard_error=null_file
+    )
     version_string = f"--py{''.join(map(str, args.min_version))}-plus"
 
     # Add, replace and reorder imports
@@ -191,7 +193,7 @@ async def async_run(args: argparse.Namespace) -> int:
         print(
             f"Limit applied! Only updated the first {args.limit} "
             f"of {len(files_updated)} files")
-        async_restore_files(files_updated[args.limit:])
+        await async_restore_files(files_updated[args.limit:])
         files_updated = files_updated[:args.limit]
 
     if args.check is True:
