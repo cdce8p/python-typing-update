@@ -39,7 +39,9 @@ async def typing_update(
         - 2, filename: if not typing update is necessary
     """
     null_file = StringIO()
-    autoflake_partial = partial(autoflake_main, standard_out=null_file, standard_error=null_file)
+    autoflake_partial: partial[int] = partial(
+        autoflake_main, standard_out=null_file, standard_error=null_file
+    )
     version_string = f"--py{''.join(map(str, args.min_version))}-plus"
 
     # Add, replace and reorder imports
