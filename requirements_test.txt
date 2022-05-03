@@ -1,7 +1,7 @@
 -r requirements_test_pre_commit.txt
 mypy==0.950
 pre-commit==2.18.1
-pylint==2.13.7
+pylint==2.13.8
 pytest==7.1.2
 pytest-asyncio==0.18.3
 types-aiofiles==0.8.8
