@@ -1,6 +1,49 @@
 [build-system]
-requires = ["setuptools~=60.5", "wheel~=0.37.1"]
+requires = ["setuptools~=62.3", "wheel~=0.37.1"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name        = "python-typing-update"
+version     = "0.4.3.dev1"  # template: x.x.x[.dev1]
+license     = {text = "MIT"}
+description = "Update Python typing syntax"
+readme      = "README.md"
+authors     = [{name = "Marc Mueller"}]
+keywords    = ["typing", "pep585", "pep604"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development",
+]
+requires-python = ">=3.8"
+dependencies    = [
+    "aiofiles==0.8.0",
+    # Custom autoflake version to parse 3.10 syntax
+    "autoflake @ git+https://github.com/cdce8p/autoflake.git@v1.4.c1",
+    "isort==5.10.1",
+    "pyupgrade==2.32.1",
+    "reorder-python-imports==3.1.0",
+]
+
+[project.optional-dependencies]
+black = [
+    "black==22.3.0",
+]
+
+[project.scripts]
+python-typing-update = "python_typing_update.__main__:main"
+
+[tool.setuptools]
+license-files = ["LICENSE", "AUTHORS"]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed", "*.pyi"]
+
+[tool.setuptools.packages.find]
+include = ["python_typing_update*"]
 
 [tool.isort]
 # https://pycqa.github.io/isort/docs/configuration/options.html
