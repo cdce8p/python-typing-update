@@ -1,9 +1,9 @@
 """Update typing syntax for Python 3.8+"""
 from __future__ import annotations
 
-from typing import Any, Container, Hashable
+from typing import Any, Container, Hashable, TypedDict
 
-from typing_extensions import TypedDict, TypeGuard
+from typing_extensions import TypeGuard
 
 var1: list[str]
 var2: Any
