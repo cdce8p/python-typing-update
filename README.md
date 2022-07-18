@@ -1,3 +1,10 @@
+## ⚠️ Archive notice ⚠️
+
+This project has been archived and will no longer receive updates.  
+Consider using [pyupgrade][pyu] together with the
+[Typing checker][pylint-typing-checker] for pylint instead.
+
+
 # Python typing update
 
 [![PyPI](https://img.shields.io/pypi/v/python-typing-update?color=blue)](https://pypi.org/project/python-typing-update/)
@@ -145,6 +152,7 @@ See [LICENSE][LICENSE_FILE] for the full license text.
 [isort]: https://github.com/PyCQA/isort
 [autoflake]: https://github.com/PyCQA/autoflake
 [black]: https://github.com/psf/black
+[pylint-typing-checker]: https://pylint.pycqa.org/en/latest/user_guide/checkers/extensions.html#pylint-extensions-typing
 [PEP585]: https://www.python.org/dev/peps/pep-0585/
 [PEP604]: https://www.python.org/dev/peps/pep-0604/
 
