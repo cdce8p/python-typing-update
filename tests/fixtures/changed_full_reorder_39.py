@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 from collections.abc import Container, Hashable
-from typing import Any, TypedDict
+from typing import Any
 
-from typing_extensions import TypeGuard
+from typing_extensions import TypedDict, TypeGuard
 
 var1: list[str]
 var2: Any
