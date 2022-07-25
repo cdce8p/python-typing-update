@@ -25,7 +25,7 @@ dependencies    = [
     "autoflake @ git+https://github.com/cdce8p/autoflake.git@v1.4.c1",
     "isort==5.10.1",
     "pyupgrade==2.37.2",
-    "reorder-python-imports==3.8.1",
+    "reorder-python-imports==3.8.2",
 ]
 
 [project.optional-dependencies]
