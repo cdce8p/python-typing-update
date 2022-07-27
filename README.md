@@ -1,5 +1,7 @@
 # Python typing update
 
+![image](https://static.pepy.tech/badge/python-typing-update)
+
 Tool to update Python typing syntax.
 It uses token analysis and
 - [python-reorder-imports][pri]
