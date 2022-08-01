@@ -6,7 +6,7 @@ repos:
         args: [--py38-plus]
         exclude: &fixtures ^tests/fixtures/.+\.py$
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 4.0.1
+    rev: 5.0.1
     hooks:
       - id: flake8
         files: ^(python_typing_update|script|tests)/.+\.py$
