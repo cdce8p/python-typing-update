@@ -1,5 +1,5 @@
 aiofiles==22.1.0
 autoflake @ git+https://github.com/cdce8p/autoflake.git@v1.4.c1
 isort==5.10.1
-pyupgrade==2.37.3
+pyupgrade==2.38.0
 reorder-python-imports==3.8.2
