@@ -24,7 +24,7 @@ dependencies    = [
     # Custom autoflake version to parse 3.10 syntax
     "autoflake @ git+https://github.com/cdce8p/autoflake.git@v1.4.c1",
     "isort==5.10.1",
-    "pyupgrade==2.38.2",
+    "pyupgrade==3.0.0",
     "reorder-python-imports==3.8.3",
 ]
 
