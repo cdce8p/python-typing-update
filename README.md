@@ -1,5 +1,8 @@
 # Python typing update
 
+![PyPI](https://img.shields.io/pypi/v/python-typing-update?color=blue)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/python-typing-update)
+![GitHub](https://img.shields.io/github/license/cdce8p/python-typing-update)
 ![image](https://static.pepy.tech/badge/python-typing-update)
 
 Tool to update Python typing syntax.
