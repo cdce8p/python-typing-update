@@ -138,7 +138,7 @@ See [LICENSE][LICENSE_FILE] for the full license text.
 [pri]: https://github.com/asottile/reorder_python_imports
 [pyu]: https://github.com/asottile/pyupgrade
 [isort]: https://github.com/PyCQA/isort
-[autoflake]: https://github.com/myint/autoflake
+[autoflake]: https://github.com/PyCQA/autoflake
 [black]: https://github.com/psf/black
 [PEP585]: https://www.python.org/dev/peps/pep-0585/
 [PEP604]: https://www.python.org/dev/peps/pep-0604/

@@ -71,29 +71,24 @@ async def typing_update(
         return 2, filename
 
     # Check for unused imports (autoflake)
-    try:
-        await loop.run_in_executor(
-            None, autoflake_partial,
-            [None, '-c', filename],
-        )
-        if (
-            args.keep_updates is False
-            and args.full_reorder is False
-            and FileStatus.COMMENT_TYPING not in file_status
-        ):
-            # -> No unused imports, revert changes
-            return 2, filename
-    except SystemExit:
-        pass
+    status_autoflake = await loop.run_in_executor(
+        None, autoflake_partial,
+        [None, '-c', filename],
+    )
+    if (
+        status_autoflake == 0
+        and args.keep_updates is False
+        and args.full_reorder is False
+        and FileStatus.COMMENT_TYPING not in file_status
+    ):
+        # -> No unused imports, revert changes
+        return 2, filename
 
     # Remove unused imports (autoflake)
-    try:
-        await loop.run_in_executor(
-            None, autoflake_partial,
-            [None, '-i', filename],
-        )
-    except SystemExit:
-        pass
+    await loop.run_in_executor(
+        None, autoflake_partial,
+        [None, '-i', filename],
+    )
 
     # Run isort
     try:
