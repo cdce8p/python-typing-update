@@ -8,7 +8,7 @@ on:
   pull_request: ~
 
 env:
-  CACHE_VERSION: 4
+  CACHE_VERSION: 1
   DEFAULT_PYTHON: 3.8
   LIB_FOLDER: python_typing_update
   PRE_COMMIT_CACHE: ~/.cache/pre-commit
@@ -29,12 +29,13 @@ jobs:
         uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
+          check-latest: true
       - name: Generate partial Python venv restore key
         id: generate-python-key
         run: >-
-          echo "::set-output name=key::base-venv-${{ env.CACHE_VERSION }}-${{
+          echo "key=base-venv-${{ env.CACHE_VERSION }}-${{
             hashFiles('requirements.txt', 'requirements_test.txt',
-                      'requirements_test_pre_commit.txt') }}"
+                      'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
         uses: actions/cache@v3.0.11
@@ -54,8 +55,8 @@ jobs:
       - name: Generate pre-commit restore key
         id: generate-pre-commit-key
         run: >-
-          echo "::set-output name=key::pre-commit-${{ env.CACHE_VERSION }}-${{
-            hashFiles('.pre-commit-config.yaml') }}"
+          echo "key=pre-commit-${{ env.CACHE_VERSION }}-${{
+            hashFiles('.pre-commit-config.yaml') }}" >> $GITHUB_OUTPUT
       - name: Restore pre-commit environment
         id: cache-precommit
         uses: actions/cache@v3.0.11
@@ -81,6 +82,7 @@ jobs:
         uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
+          check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
         uses: actions/cache@v3.0.11
@@ -121,6 +123,7 @@ jobs:
         uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
+          check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
         uses: actions/cache@v3.0.11
@@ -150,6 +153,7 @@ jobs:
         uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
+          check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
         uses: actions/cache@v3.0.11
@@ -184,12 +188,13 @@ jobs:
         uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ matrix.python-version }}
+          check-latest: true
       - name: Generate partial Python venv restore key
         id: generate-python-key
         run: >-
-          echo "::set-output name=key::venv-${{ env.CACHE_VERSION }}-${{
+          echo "key=venv-${{ env.CACHE_VERSION }}-${{
             hashFiles('requirements.txt', 'requirements_test.txt',
-                      'requirements_test_pre_commit.txt') }}"
+                      'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
         uses: actions/cache@v3.0.11
