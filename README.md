@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/python-typing-update?color=blue)](https://pypi.org/project/python-typing-update/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/python-typing-update)](https://github.com/cdce8p/python-typing-update)
 [![GitHub](https://img.shields.io/github/license/cdce8p/python-typing-update)](https://github.com/cdce8p/python-typing-update/blob/main/LICENSE)
-[![image](https://static.pepy.tech/badge/python-typing-update)](https://pypi.org/project/python-typing-update/)
+[![image](https://static.pepy.tech/badge/python-typing-update)](https://pepy.tech/project/python-typing-update)
 
 Tool to update Python typing syntax.
 It uses token analysis and
