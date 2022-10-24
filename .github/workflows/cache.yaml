@@ -1,4 +1,4 @@
-name: Delete Unused Caches
+name: Delete Caches
 
 on:
   pull_request:
@@ -12,6 +12,7 @@ on:
 
 jobs:
   delete:
+    name: Delete unused caches (PR ${{ github.event.inputs.pr-number || github.event.number }})
     runs-on: ubuntu-latest
     permissions:
       actions: write
