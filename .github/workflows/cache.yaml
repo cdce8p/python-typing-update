@@ -30,14 +30,14 @@ jobs:
             /repos/${{ github.repository }}/actions/caches?sort=$sort)
 
           res_count=$(echo "$res" | jq '.actions_caches | length')
-          if [[ "$res_count" -eq 0 ]]; then break; fi
+          if [[ "$res_count" -eq 0 ]]; then exit; fi
 
           targets=$(echo "$res" | jq \
             --arg ref "$ref" \
             '.actions_caches[] | select(.ref == $ref)
               | del(.created_at, .size_in_bytes, .version)')
           targets_count=$(echo "$targets" | jq -s 'length')
-          if [[ "$targets_count" -eq 0 ]]; then break; fi
+          if [[ "$targets_count" -eq 0 ]]; then exit; fi
           echo "Found $targets_count caches"
           echo "$targets"
 
