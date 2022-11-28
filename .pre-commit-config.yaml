@@ -9,6 +9,10 @@ repos:
     rev: 6.0.0
     hooks:
       - id: flake8
+        additional_dependencies:
+          - mccabe==0.7.0
+          - pycodestyle==2.10.0
+          - pyflakes==3.0.1
         files: ^(python_typing_update|script|tests)/.+\.py$
         exclude: *fixtures
   - repo: https://github.com/PyCQA/isort
