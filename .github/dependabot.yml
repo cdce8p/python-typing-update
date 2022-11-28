@@ -10,6 +10,8 @@ updates:
       - "cdce8p"
     open-pull-requests-limit: 10
     rebase-strategy: "disabled"
+    # Always use only the latest version
+    versioning-strategy: increase
 
   - package-ecosystem: "github-actions"
     directory: "/"
