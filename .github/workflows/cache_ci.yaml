@@ -75,7 +75,7 @@ jobs:
               fi
               (( version_count += 1 ))
 
-              key=".+-$version.+-$prefix"
+              key=".+-$version.+-$prefix-\d"
               echo "Check key regex: $key ..."
               if [[ "$index" -eq 1 ]]; then
                 echo "..Keep last cache entry"
