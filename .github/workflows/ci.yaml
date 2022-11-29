@@ -33,7 +33,7 @@ jobs:
       - name: Generate partial Python venv restore key
         id: generate-python-key
         run: >-
-          echo "key=base-venv-${{ env.CACHE_VERSION }}-${{
+          echo "key=venv-base-${{ env.CACHE_VERSION }}-${{
             hashFiles('requirements.txt', 'requirements_test.txt',
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
@@ -63,12 +63,24 @@ jobs:
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           key: >-
-            ${{ runner.os }}-${{ steps.generate-pre-commit-key.outputs.key }}
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+            steps.generate-pre-commit-key.outputs.key }}
       - name: Install pre-commit dependencies
         if: steps.cache-precommit.outputs.cache-hit != 'true'
         run: |
           . venv/bin/activate
           pre-commit install --install-hooks
+      - name: Prepare cleanup-cache artifact
+        run: |
+          ref="${{ github.ref }}"
+
+          echo "ref: $ref"
+          echo "$ref" >> cleanup_cache
+      - name: Upload cleanup-cache artifact
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: cleanup_cache
+          path: cleanup_cache
 
   formatting:
     name: Run pre-commit checks
@@ -100,7 +112,8 @@ jobs:
         uses: actions/cache@v3.0.11
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
-          key: ${{ runner.os }}-${{ needs.prepare-base.outputs.pre-commit-key }}
+          key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+            needs.prepare-base.outputs.pre-commit-key }}
       - name: Fail job if pre-commit cache restore failed
         if: steps.cache-precommit.outputs.cache-hit != 'true'
         run: |
