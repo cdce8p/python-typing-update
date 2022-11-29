@@ -1,0 +1,122 @@
+name: Delete Caches (CI)
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+jobs:
+  delete:
+    name: Delete caches
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ARTIFACT_NAME: cleanup_cache
+      ALL_VENV_PREFIXES: venv, venv-base, pre-commit
+      ALL_PYTHON_VERSIONS: 3.8, 3.9, 3.10, 3.11
+    steps:
+      - name: Download workflow artifact
+        id: download-artifact
+        run: |
+          all_artifacts=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts)
+
+          ids=$(echo "$all_artifacts" | jq \
+            --arg key "$ARTIFACT_NAME" \
+            '.artifacts[] | select(.name == $key) | [.id]')
+
+          count=$(echo "$ids" | jq 'length')
+          if [[ "$count" -eq 0 ]]; then
+            echo "result=skip" >> $GITHUB_OUTPUT
+            exit
+          fi
+
+          id=$(echo "$ids" | jq '.[0]')
+          echo "Download artifact with id: $id ..."
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/artifacts/$id/zip >> "$ARTIFACT_NAME.zip"
+
+          unzip "$ARTIFACT_NAME.zip"
+      - name: Identify caches to delete
+        id: identify-caches
+        if: steps.download-artifact.outputs.result != 'skip'
+        run: |
+          sort="last_accessed_at"
+          cache_count=0
+
+          all_versions=$(echo $ALL_PYTHON_VERSIONS | tr -d ",")
+          venv_prefixes=$(echo $ALL_VENV_PREFIXES | tr -d ",")
+
+          inputs=($(cat "$ARTIFACT_NAME"))
+          ref="${inputs[0]}"
+          echo "ref: $ref"
+
+          res=$(gh api --paginate \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/caches?sort=$sort)
+
+          res_count=$(echo "$res" | jq '.actions_caches | length')
+          if [[ "$res_count" -eq 0 ]]; then exit; fi
+
+          for prefix in $venv_prefixes; do
+            index=1
+            version_count=0
+
+            for version in $all_versions; do
+              # Only check all versions for prefix 'venv'
+              if [[ "$version_count" -eq 1 && "$prefix" != "venv" ]]; then
+                break
+              fi
+              (( version_count += 1 ))
+
+              key=".+-$version.+-$prefix"
+              echo "Check key regex: $key ..."
+              if [[ "$index" -eq 1 ]]; then
+                echo "..Keep last cache entry"
+              fi
+
+              # Select all cache keys which match the ref and key regex
+              targets=$(echo "$res" | jq \
+                --arg ref "$ref" --arg key "$key" --arg index $index \
+                '[.actions_caches[]
+                    | select(.ref == $ref)
+                    | select(.key | test($key))][$index | fromjson:][]
+                  | del(.created_at, .size_in_bytes, .version)')
+
+              num_ids=$(echo "$targets" | jq -s 'length')
+              if [[ "$num_ids" -eq 0 ]]; then continue; fi
+              echo "$targets"
+
+              echo "$targets" | jq '.id' >> cache_ids
+              cache_count=$(( cache_count + num_ids ))
+            done
+          done
+
+          echo
+          echo "Found $cache_count caches to delete"
+          echo "cache_count=$cache_count" >> $GITHUB_OUTPUT
+      - name: Delete caches
+        if: steps.identify-caches.outputs.cache_count != '0'
+        run: |
+          del_count=0
+
+          num_ids=$(cat cache_ids | jq -s 'length')
+          echo "Found $num_ids caches to delete"
+          if [[ "$num_ids" -eq 0 ]]; then exit; fi
+
+          for id in $(cat cache_ids); do
+            echo "Delete cache with id: $id ..."
+            gh api \
+              --method DELETE \
+              -H "Accept: application/vnd.github+json" \
+              /repos/${{ github.repository }}/actions/caches/$id
+            (( del_count +=  1 ))
+          done
+
+          echo "Deleted $del_count caches"
