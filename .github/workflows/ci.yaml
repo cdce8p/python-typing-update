@@ -63,7 +63,8 @@ jobs:
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           key: >-
-            ${{ runner.os }}-${{ steps.generate-pre-commit-key.outputs.key }}
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+            steps.generate-pre-commit-key.outputs.key }}
       - name: Install pre-commit dependencies
         if: steps.cache-precommit.outputs.cache-hit != 'true'
         run: |
@@ -100,7 +101,8 @@ jobs:
         uses: actions/cache@v3.0.11
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
-          key: ${{ runner.os }}-${{ needs.prepare-base.outputs.pre-commit-key }}
+          key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+            needs.prepare-base.outputs.pre-commit-key }}
       - name: Fail job if pre-commit cache restore failed
         if: steps.cache-precommit.outputs.cache-hit != 'true'
         run: |
