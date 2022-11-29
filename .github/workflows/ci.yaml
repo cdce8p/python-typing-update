@@ -70,6 +70,17 @@ jobs:
         run: |
           . venv/bin/activate
           pre-commit install --install-hooks
+      - name: Prepare cleanup-cache artifact
+        run: |
+          ref="${{ github.ref }}"
+
+          echo "ref: $ref"
+          echo "$ref" >> cleanup_cache
+      - name: Upload cleanup-cache artifact
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: cleanup_cache
+          path: cleanup_cache
 
   formatting:
     name: Run pre-commit checks
