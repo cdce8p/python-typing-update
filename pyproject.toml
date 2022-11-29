@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name        = "python-typing-update"
-version     = "0.5.1.dev1"  # template: x.x.x[.dev1]
+version     = "0.5.1"  # template: x.x.x[.dev1]
 license     = {text = "MIT"}
 description = "Update Python typing syntax"
 readme      = "README.md"
