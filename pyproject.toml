@@ -23,7 +23,7 @@ requires-python = ">=3.8"
 dependencies    = [
     "aiofiles==22.1.0",
     "autoflake==2.0.0",
-    "isort==5.10.1",
+    "isort==5.11.3",
     "pyupgrade==3.3.1",
     "reorder-python-imports==3.9.0",
 ]
