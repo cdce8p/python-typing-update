@@ -38,7 +38,7 @@ jobs:
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache@v3.2.2
+        uses: actions/cache@v3.2.3
         with:
           path: venv
           key: >-
@@ -59,7 +59,7 @@ jobs:
             hashFiles('.pre-commit-config.yaml') }}" >> $GITHUB_OUTPUT
       - name: Restore pre-commit environment
         id: cache-precommit
-        uses: actions/cache@v3.2.2
+        uses: actions/cache@v3.2.3
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           key: >-
@@ -97,7 +97,7 @@ jobs:
           check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v3.2.2
+        uses: actions/cache/restore@v3.2.3
         with:
           path: venv
           key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
@@ -109,7 +109,7 @@ jobs:
           exit 1
       - name: Restore pre-commit environment
         id: cache-precommit
-        uses: actions/cache/restore@v3.2.2
+        uses: actions/cache/restore@v3.2.3
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
@@ -139,7 +139,7 @@ jobs:
           check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v3.2.2
+        uses: actions/cache/restore@v3.2.3
         with:
           path: venv
           key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
@@ -169,7 +169,7 @@ jobs:
           check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v3.2.2
+        uses: actions/cache/restore@v3.2.3
         with:
           path: venv
           key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
@@ -210,7 +210,7 @@ jobs:
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache@v3.2.2
+        uses: actions/cache@v3.2.3
         with:
           path: venv
           key: >-
