@@ -1,6 +1,6 @@
 -r requirements_test_pre_commit.txt
 mypy==1.0.1
-pre-commit==3.0.4
+pre-commit==3.1.0
 pylint==2.16.2
 pytest==7.2.1
 pytest-asyncio==0.20.3
