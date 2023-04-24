@@ -16,6 +16,7 @@ jobs:
       name: PyPI
       url: https://pypi.org/project/python-typing-update/
     permissions:
+      id-token: write  # Required for publishing with OIDC to PyPI
       contents: write  # Required to upload release assets
     steps:
       - name: Check out code from Github
@@ -27,16 +28,11 @@ jobs:
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: Build distributions
         run: |
-          python -m pip install -U pip twine build wheel
+          python -m pip install -U pip build wheel
           python -m build
       - name: Upload to PyPI
         if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags')
-        env:
-          TWINE_REPOSITORY: pypi
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          twine upload --verbose dist/*
+        uses: pypa/gh-action-pypi-publish@v1.8.5
       - name: Upload release assets
         uses: softprops/action-gh-release@v0.1.15
         with:
