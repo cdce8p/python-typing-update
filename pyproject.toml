@@ -24,7 +24,7 @@ dependencies    = [
     "aiofiles==23.1.0",
     "autoflake==2.2.0",
     "isort==5.12.0",
-    "pyupgrade==3.7.0",
+    "pyupgrade==3.8.0",
     "reorder-python-imports==3.10.0",
 ]
 
