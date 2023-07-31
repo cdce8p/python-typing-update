@@ -134,6 +134,12 @@ Set the minimum Python syntax version to **3.9**. (Default: **3.8**)
 **`--py310-plus`**  
 Set the minimum Python syntax version to **3.10**. (Default: **3.8**)
 
+**`--py311-plus`**  
+Set the minimum Python syntax version to **3.11**. (Default: **3.8**)
+
+**`--py312-plus`**  
+Set the minimum Python syntax version to **3.12**. (Default: **3.8**)
+
 
 ## License
 This Project is licensed under the MIT license.
