@@ -6,13 +6,13 @@ repos:
         args: [--py38-plus]
         exclude: &fixtures ^tests/fixtures/.+\.py$
   - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+    rev: 6.1.0
     hooks:
       - id: flake8
         additional_dependencies:
           - mccabe==0.7.0
-          - pycodestyle==2.10.0
-          - pyflakes==3.0.1
+          - pycodestyle==2.11.0
+          - pyflakes==3.1.0
         files: ^(python_typing_update|script|tests)/.+\.py$
         exclude: *fixtures
   - repo: https://github.com/PyCQA/isort
