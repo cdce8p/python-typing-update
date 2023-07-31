@@ -105,6 +105,14 @@ async def async_main(argv: list[str] | None = None) -> int:
         '--py310-plus',
         action='store_const', dest='min_version', const=(3, 10),
     )
+    group_py_version.add_argument(
+        '--py311-plus',
+        action='store_const', dest='min_version', const=(3, 11),
+    )
+    group_py_version.add_argument(
+        '--py312-plus',
+        action='store_const', dest='min_version', const=(3, 12),
+    )
 
     argv = argv or sys.argv[1:]
     args = parser.parse_args(argv)
