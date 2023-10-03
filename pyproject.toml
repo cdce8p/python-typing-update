@@ -26,7 +26,7 @@ dependencies    = [
     "autoflake==2.2.1",
     "isort==5.12.0",
     "pyupgrade==3.13.0",
-    "reorder-python-imports==3.11.0",
+    "reorder-python-imports==3.12.0",
 ]
 
 [project.optional-dependencies]
