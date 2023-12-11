@@ -58,7 +58,7 @@ async def async_test_main(
     (
         pytest.param(
             'changed.py', 'changed_fixed.py',
-            None, 0,
+            ['--py38-plus'], 0,
             id="typing_updated",
         ),
         pytest.param(
@@ -93,7 +93,7 @@ async def async_test_main(
         ),
         pytest.param(
             'changed.py', 'changed_fixed.py',
-            ['-v'], 12,
+            ['-v', '--py38-plus'], 12,
             id="debug",
         ),
     ),
@@ -463,12 +463,12 @@ async def test_main_unused_import_comment(
     (
         pytest.param(
             'keep_updates.py', 'keep_updates_no_change.py',
-            None, 0,
+            ['--py38-plus'], 0,
             id="no_import_removed",
         ),
         pytest.param(
             'keep_updates.py', 'keep_updates_fixed.py',
-            ['--keep-updates'], 0,
+            ['--keep-updates', '--py38-plus'], 0,
             id="keep_updates",
         ),
     ),
