@@ -13,14 +13,13 @@ keywords    = ["typing", "pep585", "pep604"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies    = [
     "aiofiles==23.2.1",
     "autoflake==2.2.1",
@@ -67,7 +66,7 @@ asyncio_mode = "auto"  # https://github.com/pytest-dev/pytest-asyncio#modes
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/stable/config_file.html
-python_version = 3.8
+python_version = 3.9
 show_error_codes = true
 ignore_missing_imports = true
 strict = true
