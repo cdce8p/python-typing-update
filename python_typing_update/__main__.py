@@ -90,7 +90,7 @@ async def async_main(argv: list[str] | None = None) -> int:
     group_py_version = py_version_options.add_mutually_exclusive_group()
     group_py_version.add_argument(
         '--py37-plus',
-        action='store_const', dest='min_version', const=(3, 7), default=(3, 8),
+        action='store_const', dest='min_version', const=(3, 7), default=(3, 9),
     )
     group_py_version.add_argument(
         '--py38-plus',

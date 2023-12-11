@@ -3,7 +3,7 @@ ignore=
 load-plugins =
     pylint.extensions.typing,
     pylint.extensions.code_style,
-py-version = 3.8
+py-version = 3.9
 
 [BASIC]
 good-names =
