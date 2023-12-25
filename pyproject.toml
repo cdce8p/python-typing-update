@@ -30,7 +30,7 @@ dependencies    = [
 
 [project.optional-dependencies]
 black = [
-    "black==23.12.0",
+    "black==23.12.1",
 ]
 
 [project.scripts]
