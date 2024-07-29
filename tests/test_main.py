@@ -24,7 +24,7 @@ async def async_check_changes(filename: str, control: str) -> None:
 
 
 @asynccontextmanager
-async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None, None]:
+async def async_restore_fixtures(file_list: list[str]) -> AsyncGenerator[None]:
     try:
         yield
     finally:
