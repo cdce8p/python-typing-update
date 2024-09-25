@@ -62,7 +62,9 @@ testpaths = ["tests"]
 norecursedirs = ["fixtures"]
 console_output_style = "count"
 log_level = "NOTSET"
-asyncio_mode = "auto"  # https://github.com/pytest-dev/pytest-asyncio#modes
+# https://pytest-asyncio.readthedocs.io/en/latest/reference/configuration.html
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/stable/config_file.html
