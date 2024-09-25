@@ -13,6 +13,7 @@ repos:
           - mccabe==0.7.0
           - pycodestyle==2.12.1
           - pyflakes==3.2.0
+          - Flake8-pyproject==1.2.3
         files: ^(python_typing_update|script|tests)/.+\.py$
         exclude: *fixtures
   - repo: https://github.com/PyCQA/isort

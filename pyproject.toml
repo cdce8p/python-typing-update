@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development",
 ]
 requires-python = ">=3.9"
@@ -27,6 +28,9 @@ dependencies    = [
     "pyupgrade==3.18.0",
     "reorder-python-imports==3.14.0",
 ]
+
+[project.urls]
+"Source Code"   = "https://github.com/cdce8p/python-typing-update"
 
 [project.optional-dependencies]
 black = [
@@ -68,7 +72,7 @@ asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/stable/config_file.html
-python_version = 3.9
+python_version = "3.9"
 show_error_codes = true
 ignore_missing_imports = true
 strict = true
@@ -99,3 +103,12 @@ allow_any_generics = true
 # disallow_untyped_calls = false
 # disallow_untyped_defs = false
 # disallow_incomplete_defs = false
+
+[tool.flake8]
+max_line_length = 119
+extend_exclude = [
+    ".github",
+    ".vscode",
+    "tests/fixtures",
+    "venv*",
+]

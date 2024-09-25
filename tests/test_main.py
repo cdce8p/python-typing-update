@@ -115,6 +115,9 @@ async def test_main(
         pytest.param(['--py38-plus']),
         pytest.param(['--py39-plus']),
         pytest.param(['--py310-plus']),
+        pytest.param(['--py311-plus']),
+        pytest.param(['--py312-plus']),
+        pytest.param(['--py313-plus']),
     ),
 )
 async def test_py_version(
