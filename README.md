@@ -12,6 +12,7 @@ It uses token analysis and
 - [isort][isort]
 - [autoflake][autoflake]
 - [black][black]
+- [ruff][ruff]
 - git
 
 to try and update the typing syntax the best it can.
@@ -48,7 +49,8 @@ In particular, these need to be updated manually:
    unused. If not, revert changes with `git restore`.
 4. Remove unused imports with [autoflake][autoflake].
 5. Run [isort][isort] to try to restore the previous formatting.
-6. Optional: Run [black][black]. (Requires `black` to be added as `additional_dependency`)
+6. Optional: Run [black][black]. (Requires `black` to be added as `additional_dependency`)  
+   OR: Run [ruff][ruff]. (Requires `ruff` to be added as `additional_dependency`)
 7. Check `git diff` for modified comments.
    If one is detected, revert changes and print file name.
    Can be overwritten with `--force`.
@@ -99,6 +101,15 @@ To use it, add `black` as `additional_dependency` in your `.pre-commit-config.ya
 ```yaml
         additional_dependencies:
           - black==<insert current version here!>
+```
+
+**`--ruff`**  
+Run `ruff check --fix` and `ruff format` after updates.  
+To use it, add `ruff` as `additional_dependency` in your `.pre-commit-config.yaml`.
+
+```yaml
+        additional_dependencies:
+          - ruff==<insert current version here!>
 ```
 
 **`--disable-committed-check`**  
@@ -154,6 +165,7 @@ See [LICENSE][LICENSE_FILE] for the full license text.
 [isort]: https://github.com/PyCQA/isort
 [autoflake]: https://github.com/PyCQA/autoflake
 [black]: https://github.com/psf/black
+[ruff]: https://github.com/astral-sh/ruff
 [PEP585]: https://www.python.org/dev/peps/pep-0585/
 [PEP604]: https://www.python.org/dev/peps/pep-0604/
 

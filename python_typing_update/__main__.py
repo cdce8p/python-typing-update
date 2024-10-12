@@ -29,6 +29,7 @@ async def async_main(argv: list[str] | None = None) -> int:
         description="Tool to update Python typing syntax.",
         formatter_class=CustomHelpFormatter,
     )
+    formatter_options = parser.add_argument_group("select optional formatter")
     mode_options = parser.add_argument_group("select different mode")
     py_version_options = parser.add_argument_group("python version options")
 
@@ -60,14 +61,21 @@ async def async_main(argv: list[str] | None = None) -> int:
         help="Keep updates even if no import was removed",
     )
     parser.add_argument(
-        '--black',
-        action='store_true',
-        help="Run black formatting after update",
-    )
-    parser.add_argument(
         '--disable-committed-check',
         action='store_true',
         help="Don't abort with uncommitted changes. Don't use it in production!",
+    )
+
+    group_formatter = formatter_options.add_mutually_exclusive_group()
+    group_formatter.add_argument(
+        '--black',
+        action='store_true',
+        help="Run 'black' after update",
+    )
+    group_formatter.add_argument(
+        '--ruff',
+        action='store_true',
+        help="Run 'ruff check --fix' and 'ruff format' after update",
     )
 
     group_mode = mode_options.add_mutually_exclusive_group()
@@ -95,11 +103,11 @@ async def async_main(argv: list[str] | None = None) -> int:
     group_py_version.add_argument(
         '--py38-plus',
         action='store_const', dest='min_version', const=(3, 8),
-        help="Default"
     )
     group_py_version.add_argument(
         '--py39-plus',
         action='store_const', dest='min_version', const=(3, 9),
+        help="Default"
     )
     group_py_version.add_argument(
         '--py310-plus',
@@ -127,10 +135,17 @@ async def async_main(argv: list[str] | None = None) -> int:
 
     if args.black:
         try:
-            # pylint: disable=unused-import,import-outside-toplevel
+            # pylint: disable-next=unused-import,import-outside-toplevel
             import black  # noqa: F401
         except ImportError:
-            print("Error! Black is not installed")
+            print("Error! Black isn't installed")
+            return 2
+    elif args.ruff:
+        try:
+            # pylint: disable-next=unused-import,import-outside-toplevel
+            import ruff  # noqa: F401
+        except ImportError:
+            print("Error! Ruff isn't installed")
             return 2
 
     return await async_run(args)
