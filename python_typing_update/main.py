@@ -109,12 +109,7 @@ async def typing_update(
         await process.communicate()
     elif args.ruff:
         process = await asyncio.create_subprocess_shell(
-            f"ruff check --force-exclude --fix {filename}",
-            stdout=asyncio.subprocess.DEVNULL,
-            stderr=asyncio.subprocess.DEVNULL,
-        )
-        await process.communicate()
-        process = await asyncio.create_subprocess_shell(
+            f"ruff check --force-exclude --fix {filename} && "
             f"ruff format --force-exclude {filename}",
             stdout=asyncio.subprocess.DEVNULL,
             stderr=asyncio.subprocess.DEVNULL,
