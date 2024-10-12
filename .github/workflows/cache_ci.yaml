@@ -17,7 +17,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ARTIFACT_NAME: cleanup_cache
       ALL_VENV_PREFIXES: venv, venv-base, pre-commit
-      ALL_PYTHON_VERSIONS: 3.9, 3.10, 3.11, 3.12
+      ALL_PYTHON_VERSIONS: 3.9, 3.10, 3.11, 3.12, 3.13
     steps:
       - name: Download workflow artifact
         id: download-artifact
