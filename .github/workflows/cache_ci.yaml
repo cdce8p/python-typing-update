@@ -10,7 +10,7 @@ on:
 jobs:
   delete:
     name: Delete caches
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       actions: write
     env:
