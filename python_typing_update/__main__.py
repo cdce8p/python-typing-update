@@ -4,8 +4,8 @@
 from __future__ import annotations
 
 import argparse
-import logging
 import asyncio
+import logging
 import sys
 
 from .main import async_run
