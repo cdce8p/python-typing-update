@@ -28,10 +28,10 @@ jobs:
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: Build distributions
         run: |
-          python -m pip install -U pip build
+          python -m pip install build
           python -m build
       - name: Upload to PyPI
-        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags')
+        if: github.event_name == 'release'
         uses: pypa/gh-action-pypi-publish@v1.12.4
       - name: Upload release assets
         uses: softprops/action-gh-release@v2.2.1
