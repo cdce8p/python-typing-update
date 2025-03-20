@@ -1,11 +1,12 @@
 [build-system]
-requires = ["setuptools~=76.0"]
+requires = ["setuptools~=77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name        = "python-typing-update"
 version     = "0.7.2.dev0"  # template: x.x.x[.dev0]
-license     = {text = "MIT"}
+license     = "MIT"
+license-files = ["LICENSE", "AUTHORS"]
 description = "Update Python typing syntax"
 readme      = "README.md"
 authors     = [{name = "Marc Mueller"}]
@@ -30,7 +31,7 @@ dependencies    = [
 ]
 
 [project.urls]
-"Source Code"   = "https://github.com/cdce8p/python-typing-update"
+"Source Code" = "https://github.com/cdce8p/python-typing-update"
 
 [project.optional-dependencies]
 black = [
@@ -42,12 +43,6 @@ ruff = [
 
 [project.scripts]
 python-typing-update = "python_typing_update.__main__:main"
-
-[tool.setuptools]
-license-files = ["LICENSE", "AUTHORS"]
-
-[tool.setuptools.package-data]
-"*" = ["py.typed", "*.pyi"]
 
 [tool.setuptools.packages.find]
 include = ["python_typing_update*"]
