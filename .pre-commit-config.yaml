@@ -11,7 +11,7 @@ repos:
       - id: flake8
         additional_dependencies:
           - mccabe==0.7.0
-          - pycodestyle==2.12.1
+          - pycodestyle==2.13.0
           - pyflakes==3.2.0
           - Flake8-pyproject==1.2.3
         files: ^(python_typing_update|script|tests)/.+\.py$
