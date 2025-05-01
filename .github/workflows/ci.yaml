@@ -42,7 +42,8 @@ jobs:
         with:
           path: venv
           key: >-
-            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+            ${{ runner.os }}-${{ runner.arch }}-${{
+            steps.python.outputs.python-version }}-${{
             steps.generate-python-key.outputs.key }}
       - name: Create Python virtual environment
         if: steps.cache-venv.outputs.cache-hit != 'true'
@@ -63,7 +64,8 @@ jobs:
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           key: >-
-            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+            ${{ runner.os }}-${{ runner.arch }}-${{
+            steps.python.outputs.python-version }}-${{
             steps.generate-pre-commit-key.outputs.key }}
       - name: Install pre-commit dependencies
         if: steps.cache-precommit.outputs.cache-hit != 'true'
@@ -101,7 +103,8 @@ jobs:
         with:
           fail-on-cache-miss: true
           path: venv
-          key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+          key: ${{ runner.os }}-${{ runner.arch }}-${{
+            steps.python.outputs.python-version }}-${{
             needs.prepare-base.outputs.python-key }}
       - name: Restore pre-commit environment
         id: cache-precommit
@@ -109,7 +112,8 @@ jobs:
         with:
           fail-on-cache-miss: true
           path: ${{ env.PRE_COMMIT_CACHE }}
-          key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+          key: ${{ runner.os }}-${{ runner.arch }}-${{
+            steps.python.outputs.python-version }}-${{
             needs.prepare-base.outputs.pre-commit-key }}
       - name: Run formatting check
         run: |
@@ -135,7 +139,8 @@ jobs:
         with:
           fail-on-cache-miss: true
           path: venv
-          key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+          key: ${{ runner.os }}-${{ runner.arch }}-${{
+            steps.python.outputs.python-version }}-${{
             needs.prepare-base.outputs.python-key }}
       - name: Run pylint
         run: |
@@ -161,7 +166,8 @@ jobs:
         with:
           fail-on-cache-miss: true
           path: venv
-          key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+          key: ${{ runner.os }}-${{ runner.arch }}-${{
+            steps.python.outputs.python-version }}-${{
             needs.prepare-base.outputs.python-key }}
       - name: Run mypy
         run: |
@@ -198,7 +204,8 @@ jobs:
         with:
           path: venv
           key: >-
-            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+            ${{ runner.os }}-${{ runner.arch }}-${{
+            steps.python.outputs.python-version }}-${{
             steps.generate-python-key.outputs.key }}
       - name: Create Python virtual environment
         if: steps.cache-venv.outputs.cache-hit != 'true'
