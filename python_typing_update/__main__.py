@@ -7,6 +7,7 @@ import argparse
 import asyncio
 import logging
 import sys
+from typing import Any
 
 from .main import async_run
 
@@ -15,19 +16,32 @@ logger = logging.getLogger(__name__)
 
 class CustomHelpFormatter(argparse.HelpFormatter):
     def __init__(
-        self, prog: str, indent_increment: int = 2,
-        max_help_position: int = 24, width: int | None = None,
+        self,
+        prog: str,
+        indent_increment: int = 2,
+        max_help_position: int = 24,
+        width: int | None = None,
+        **kwargs: Any,
     ) -> None:
         max_help_position = 40
         super().__init__(
-            prog, indent_increment=indent_increment,
-            max_help_position=max_help_position, width=width)
+            prog,
+            indent_increment=indent_increment,
+            max_help_position=max_help_position,
+            width=width,
+            **kwargs,
+        )
 
 
 async def async_main(argv: list[str] | None = None) -> int:
+    parser_kwargs: dict[str, Any] = {}
+    if sys.version_info >= (3, 14):
+        parser_kwargs["color"] = True
+
     parser = argparse.ArgumentParser(
         description="Tool to update Python typing syntax.",
         formatter_class=CustomHelpFormatter,
+        **parser_kwargs,
     )
     formatter_options = parser.add_argument_group("select optional formatter")
     mode_options = parser.add_argument_group("select different mode")
