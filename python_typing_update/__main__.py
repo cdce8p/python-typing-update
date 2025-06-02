@@ -34,15 +34,12 @@ class CustomHelpFormatter(argparse.HelpFormatter):
 
 
 async def async_main(argv: list[str] | None = None) -> int:
-    parser_kwargs: dict[str, Any] = {}
-    if sys.version_info >= (3, 14):
-        parser_kwargs["color"] = True
-
     parser = argparse.ArgumentParser(
         description="Tool to update Python typing syntax.",
         formatter_class=CustomHelpFormatter,
-        **parser_kwargs,
     )
+    if sys.version_info >= (3, 14):
+        parser.color = True  # Set as init arg in 3.14
     formatter_options = parser.add_argument_group("select optional formatter")
     mode_options = parser.add_argument_group("select different mode")
     py_version_options = parser.add_argument_group("python version options")
