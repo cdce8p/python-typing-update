@@ -180,7 +180,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
     outputs:
       python-key: ${{ steps.generate-python-key.outputs.key }}
     steps:
@@ -191,6 +191,7 @@ jobs:
         uses: actions/setup-python@v5.6.0
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
           check-latest: true
       - name: Generate partial Python venv restore key
         id: generate-python-key

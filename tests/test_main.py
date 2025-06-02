@@ -118,6 +118,7 @@ async def test_main(
         pytest.param(['--py311-plus']),
         pytest.param(['--py312-plus']),
         pytest.param(['--py313-plus']),
+        pytest.param(['--py314-plus']),
     ),
 )
 async def test_py_version(
