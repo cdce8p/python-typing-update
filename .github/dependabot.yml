@@ -14,6 +14,13 @@ updates:
     rebase-strategy: "disabled"
     # Always use only the latest version
     versioning-strategy: increase
+    groups:
+      flake8-dependencies:
+        patterns:
+          - flake8
+          - pycodestyle
+          - pyflakes
+
 
   - package-ecosystem: "github-actions"
     directory: "/"
