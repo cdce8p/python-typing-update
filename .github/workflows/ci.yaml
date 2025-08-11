@@ -38,7 +38,7 @@ jobs:
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.2.4
         with:
           path: venv
           key: >-
@@ -60,7 +60,7 @@ jobs:
             hashFiles('.pre-commit-config.yaml') }}" >> $GITHUB_OUTPUT
       - name: Restore pre-commit environment
         id: cache-precommit
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.2.4
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           key: >-
@@ -99,7 +99,7 @@ jobs:
           check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4.2.3
+        uses: actions/cache/restore@v4.2.4
         with:
           fail-on-cache-miss: true
           path: venv
@@ -108,7 +108,7 @@ jobs:
             needs.prepare-base.outputs.python-key }}
       - name: Restore pre-commit environment
         id: cache-precommit
-        uses: actions/cache/restore@v4.2.3
+        uses: actions/cache/restore@v4.2.4
         with:
           fail-on-cache-miss: true
           path: ${{ env.PRE_COMMIT_CACHE }}
@@ -135,7 +135,7 @@ jobs:
           check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4.2.3
+        uses: actions/cache/restore@v4.2.4
         with:
           fail-on-cache-miss: true
           path: venv
@@ -162,7 +162,7 @@ jobs:
           check-latest: true
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4.2.3
+        uses: actions/cache/restore@v4.2.4
         with:
           fail-on-cache-miss: true
           path: venv
@@ -201,7 +201,7 @@ jobs:
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.2.4
         with:
           path: venv
           key: >-
