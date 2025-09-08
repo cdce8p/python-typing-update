@@ -9,7 +9,7 @@ on:
 
 env:
   CACHE_VERSION: 1
-  DEFAULT_PYTHON: 3.9
+  DEFAULT_PYTHON: "3.9"
   LIB_FOLDER: python_typing_update
   PRE_COMMIT_CACHE: ~/.cache/pre-commit
 
