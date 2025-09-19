@@ -17,16 +17,18 @@ env:
 jobs:
   prepare-base:
     name: Prepare base dependencies
-    runs-on: ubuntu-latest
+    runs-on: &runs-on-ubuntu ubuntu-latest
     outputs:
       python-key: ${{ steps.generate-python-key.outputs.key }}
       pre-commit-key: ${{ steps.generate-pre-commit-key.outputs.key }}
     steps:
-      - name: Check out code from GitHub
+      - &checkout
+        name: Check out code from GitHub
         uses: actions/checkout@v5.0.0
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      - &setup-python-default
+        name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
-        uses: actions/setup-python@v6.0.0
+        uses: &actions-setup-python actions/setup-python@v6.0.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
           check-latest: true
@@ -38,7 +40,7 @@ jobs:
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache@v4.2.4
+        uses: &actions-cache actions/cache@v4.2.4
         with:
           path: venv
           key: >-
@@ -60,7 +62,7 @@ jobs:
             hashFiles('.pre-commit-config.yaml') }}" >> $GITHUB_OUTPUT
       - name: Restore pre-commit environment
         id: cache-precommit
-        uses: actions/cache@v4.2.4
+        uses: *actions-cache
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           key: >-
@@ -86,20 +88,15 @@ jobs:
 
   formatting:
     name: Run pre-commit checks
-    runs-on: ubuntu-latest
-    needs: prepare-base
+    runs-on: *runs-on-ubuntu
+    needs: &needs-base [prepare-base]
     steps:
-      - name: Check out code from GitHub
-        uses: actions/checkout@v5.0.0
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v6.0.0
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-          check-latest: true
-      - name: Restore Python virtual environment
+      - *checkout
+      - *setup-python-default
+      - &cache-restore-python-base
+        name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4.2.4
+        uses: &actions-cache-restore actions/cache/restore@v4.2.4
         with:
           fail-on-cache-miss: true
           path: venv
@@ -108,7 +105,7 @@ jobs:
             needs.prepare-base.outputs.python-key }}
       - name: Restore pre-commit environment
         id: cache-precommit
-        uses: actions/cache/restore@v4.2.4
+        uses: *actions-cache-restore
         with:
           fail-on-cache-miss: true
           path: ${{ env.PRE_COMMIT_CACHE }}
@@ -122,26 +119,12 @@ jobs:
 
   pylint:
     name: Check pylint
-    runs-on: ubuntu-latest
-    needs: prepare-base
+    runs-on: *runs-on-ubuntu
+    needs: *needs-base
     steps:
-      - name: Check out code from GitHub
-        uses: actions/checkout@v5.0.0
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v6.0.0
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-          check-latest: true
-      - name: Restore Python virtual environment
-        id: cache-venv
-        uses: actions/cache/restore@v4.2.4
-        with:
-          fail-on-cache-miss: true
-          path: venv
-          key: ${{ runner.os }}-${{ runner.arch }}-${{
-            steps.python.outputs.python-version }}-${{
-            needs.prepare-base.outputs.python-key }}
+      - *checkout
+      - *setup-python-default
+      - *cache-restore-python-base
       - name: Run pylint
         run: |
           . venv/bin/activate
@@ -149,26 +132,12 @@ jobs:
 
   mypy:
     name: Check mypy
-    runs-on: ubuntu-latest
-    needs: prepare-base
+    runs-on: *runs-on-ubuntu
+    needs: *needs-base
     steps:
-      - name: Check out code from GitHub
-        uses: actions/checkout@v5.0.0
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        id: python
-        uses: actions/setup-python@v6.0.0
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-          check-latest: true
-      - name: Restore Python virtual environment
-        id: cache-venv
-        uses: actions/cache/restore@v4.2.4
-        with:
-          fail-on-cache-miss: true
-          path: venv
-          key: ${{ runner.os }}-${{ runner.arch }}-${{
-            steps.python.outputs.python-version }}-${{
-            needs.prepare-base.outputs.python-key }}
+      - *checkout
+      - *setup-python-default
+      - *cache-restore-python-base
       - name: Run mypy
         run: |
           . venv/bin/activate
@@ -177,18 +146,17 @@ jobs:
 
   pytest-linux:
     name: Run tests Python ${{ matrix.python-version }} (Linux)
-    runs-on: ubuntu-latest
+    runs-on: *runs-on-ubuntu
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
     outputs:
       python-key: ${{ steps.generate-python-key.outputs.key }}
     steps:
-      - name: Check out code from GitHub
-        uses: actions/checkout@v5.0.0
+      - *checkout
       - name: Set up Python ${{ matrix.python-version }}
         id: python
-        uses: actions/setup-python@v6.0.0
+        uses: *actions-setup-python
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
@@ -201,7 +169,7 @@ jobs:
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: actions/cache@v4.2.4
+        uses: *actions-cache
         with:
           path: venv
           key: >-
