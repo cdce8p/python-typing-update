@@ -38,8 +38,6 @@ async def async_main(argv: list[str] | None = None) -> int:
         description="Tool to update Python typing syntax.",
         formatter_class=CustomHelpFormatter,
     )
-    if sys.version_info >= (3, 14):
-        parser.color = True  # Set as init arg in 3.14
     formatter_options = parser.add_argument_group("select optional formatter")
     mode_options = parser.add_argument_group("select different mode")
     py_version_options = parser.add_argument_group("python version options")
