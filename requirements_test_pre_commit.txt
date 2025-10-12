@@ -3,4 +3,4 @@ isort==6.1.0
 mccabe==0.7.0
 pycodestyle==2.14.0
 pyflakes==3.4.0
-pyupgrade==3.20.0
+pyupgrade==3.21.0
