@@ -1,6 +1,4 @@
-"""Update typing syntax for Python 3.8+"""
-from __future__ import annotations
-
+"""Update typing syntax for Python 3.10+"""
 from typing import Any
 
 var1: list[str]

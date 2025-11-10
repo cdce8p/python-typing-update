@@ -1,6 +1,4 @@
 """Comment will be changed. Only valid with '--force'."""
-from __future__ import annotations
-
 import sys
 from typing import Any
 

@@ -1,4 +1,4 @@
-"""Update typing syntax for Python 3.8+"""
+"""Update typing syntax for Python 3.10+"""
 
 from typing import Any, List, Union
 
