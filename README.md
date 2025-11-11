@@ -141,10 +141,10 @@ Set the minimum Python syntax version to **3.11**. (Default: **3.10**)
 **`--py312-plus`**  
 Set the minimum Python syntax version to **3.12**. (Default: **3.10**)
 
-**`--py313-plus`**
+**`--py313-plus`**  
 Set the minimum Python syntax version to **3.13**. (Default: **3.10**)
 
-**`--py314-plus`**
+**`--py314-plus`**  
 Set the minimum Python syntax version to **3.14**. (Default: **3.10**)
 
 
