@@ -14,7 +14,6 @@ keywords    = ["typing", "pep585", "pep604"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -22,7 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Topic :: Software Development",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies    = [
     "aiofiles==25.1.0",
     "autoflake==2.3.1",
@@ -71,7 +70,7 @@ asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/stable/config_file.html
-python_version = "3.9"
+python_version = "3.10"
 show_error_codes = true
 ignore_missing_imports = true
 strict = true

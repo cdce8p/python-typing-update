@@ -45,7 +45,7 @@ async def typing_update(
     version_string = f"--py{''.join(map(str, args.min_version))}-plus"
 
     # Add, replace and reorder imports
-    reorder_args: list[str | None] = []
+    reorder_args: list[str] = []
     if args.min_version < (3, 10):
         reorder_args += ['--add-import', 'from __future__ import annotations']
     if args.full_reorder:

@@ -36,7 +36,7 @@ async def async_test_main(
     control: str,
     argv: list[str] | None,
     returncode: int,
-    capsys: CaptureFixture | None = None,
+    capsys: CaptureFixture[str] | None = None,
 ) -> None:
     filename = FIXTURE_PATH + filename
     control = FIXTURE_PATH + control
@@ -58,7 +58,7 @@ async def async_test_main(
     (
         pytest.param(
             'changed.py', 'changed_fixed.py',
-            ['--py38-plus'], 0,
+            None, 0,
             id="typing_updated",
         ),
         pytest.param(
@@ -82,18 +82,13 @@ async def async_test_main(
             id="check_no_changes",
         ),
         pytest.param(
-            'changed.py', 'changed_full_reorder_38.py',
-            ['--full-reorder', '--py38-plus'], 0,
-            id="full_reorder_38",
-        ),
-        pytest.param(
             'changed.py', 'changed_full_reorder_39.py',
-            ['--full-reorder', '--py39-plus'], 0,
+            ['--full-reorder'], 0,
             id="full_reorder_39",
         ),
         pytest.param(
             'changed.py', 'changed_fixed.py',
-            ['-v', '--py38-plus'], 12,
+            ['-v'], 12,
             id="debug",
         ),
     ),
@@ -103,7 +98,7 @@ async def test_main(
     control: str,
     argv: list[str] | None,
     returncode: int,
-    capsys: CaptureFixture,
+    capsys: CaptureFixture[str],
 ) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
@@ -111,9 +106,6 @@ async def test_main(
 @pytest.mark.parametrize(
     ('argv',),
     (
-        pytest.param(['--py37-plus']),
-        pytest.param(['--py38-plus']),
-        pytest.param(['--py39-plus']),
         pytest.param(['--py310-plus']),
         pytest.param(['--py311-plus']),
         pytest.param(['--py312-plus']),
@@ -123,7 +115,7 @@ async def test_main(
 )
 async def test_py_version(
     argv: list[str] | None,
-    capsys: CaptureFixture,
+    capsys: CaptureFixture[str],
 ) -> None:
     await async_test_main(
         filename='no_changes.py',
@@ -138,23 +130,13 @@ async def test_py_version(
     ('filename', 'control', 'argv', 'returncode'),
     (
         pytest.param(
-            'type_alias_39.py', 'type_alias_39_no_change.py',
-            ['--py38-plus'], 0,
-            id="type_alias_pep585_38_no_change",
-        ),
-        pytest.param(
             'type_alias_39.py', 'type_alias_39_fixed.py',
-            ['--py39-plus'], 0,
+            None, 0,
             id="type_alias_pep585_39_updated",
         ),
         pytest.param(
-            'type_alias_310.py', 'type_alias_310_no_change.py',
-            ['--py38-plus'], 0,
-            id="type_alias_pep604_38_no_change",
-        ),
-        pytest.param(
             'type_alias_310.py', 'type_alias_310_fixed.py',
-            ['--py310-plus'], 0,
+            None, 0,
             id="type_alias_pep604_310_updated",
             marks=pytest.mark.xfail(reason="Not implented in mypy + pyupgrade (yet)"),
         ),
@@ -229,7 +211,7 @@ async def test_main_comment(
     control: str,
     argv: list[str] | None,
     returncode: int,
-    capsys: CaptureFixture,
+    capsys: CaptureFixture[str],
 ) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
@@ -382,7 +364,7 @@ async def test_main_unused_import(
     control: str,
     argv: list[str] | None,
     returncode: int,
-    capsys: CaptureFixture,
+    capsys: CaptureFixture[str],
 ) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
@@ -457,7 +439,7 @@ async def test_main_unused_import_comment(
     control: str,
     argv: list[str] | None,
     returncode: int,
-    capsys: CaptureFixture,
+    capsys: CaptureFixture[str],
 ) -> None:
     await async_test_main(filename, control, argv, returncode, capsys)
 
@@ -466,13 +448,8 @@ async def test_main_unused_import_comment(
     ('filename', 'control', 'argv', 'returncode'),
     (
         pytest.param(
-            'keep_updates.py', 'keep_updates_no_change.py',
-            ['--py38-plus'], 0,
-            id="no_import_removed",
-        ),
-        pytest.param(
             'keep_updates.py', 'keep_updates_fixed.py',
-            ['--keep-updates', '--py38-plus'], 0,
+            ['--keep-updates'], 0,
             id="keep_updates",
         ),
     ),

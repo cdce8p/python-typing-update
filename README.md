@@ -133,29 +133,20 @@ Check `git diff` before committing!
 
 ### Python version options
 
-**`--py37-plus`**
-Set the minimum Python syntax version to **3.7**. (Default: **3.9**)
-
-**`--py38-plus`**  
-Set the minimum Python syntax version to **3.8**. (Default: **3.9**)
-
-**`--py39-plus`**  
-Set the minimum Python syntax version to **3.9**. This is the default.
-
 **`--py310-plus`**  
-Set the minimum Python syntax version to **3.10**. (Default: **3.9**)
+Set the minimum Python syntax version to **3.10**. This is the default.
 
 **`--py311-plus`**  
-Set the minimum Python syntax version to **3.11**. (Default: **3.9**)
+Set the minimum Python syntax version to **3.11**. (Default: **3.10**)
 
 **`--py312-plus`**  
-Set the minimum Python syntax version to **3.12**. (Default: **3.9**)
+Set the minimum Python syntax version to **3.12**. (Default: **3.10**)
 
 **`--py313-plus`**
-Set the minimum Python syntax version to **3.13**. (Default: **3.9**)
+Set the minimum Python syntax version to **3.13**. (Default: **3.10**)
 
 **`--py314-plus`**
-Set the minimum Python syntax version to **3.14**. (Default: **3.9**)
+Set the minimum Python syntax version to **3.14**. (Default: **3.10**)
 
 
 ## License
