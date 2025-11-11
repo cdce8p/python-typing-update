@@ -46,14 +46,7 @@ async def typing_update(
 
     # Add, replace and reorder imports
     reorder_args: list[str] = []
-    if args.min_version < (3, 10):
-        reorder_args += ['--add-import', 'from __future__ import annotations']
     if args.full_reorder:
-        if args.min_version >= (3, 9):
-            reorder_args += [
-                '--replace-import', 'typing=collections.abc:Hashable',
-                '--replace-import', 'typing=collections.abc:Sized',
-            ]
         reorder_args.append(version_string)
     reorder_args.append(filename)
     await loop.run_in_executor(
