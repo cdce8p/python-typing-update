@@ -40,7 +40,7 @@ jobs:
                       'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
-        uses: &actions-cache actions/cache@v4.3.0
+        uses: &actions-cache actions/cache@v5.0.1
         with:
           path: venv
           key: >-
@@ -81,7 +81,7 @@ jobs:
           echo "ref: $ref"
           echo "$ref" >> cleanup_cache
       - name: Upload cleanup-cache artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: cleanup_cache
           path: cleanup_cache
@@ -96,7 +96,7 @@ jobs:
       - &cache-restore-python-base
         name: Restore Python virtual environment
         id: cache-venv
-        uses: &actions-cache-restore actions/cache/restore@v4.3.0
+        uses: &actions-cache-restore actions/cache/restore@v5.0.1
         with:
           fail-on-cache-miss: true
           path: venv
