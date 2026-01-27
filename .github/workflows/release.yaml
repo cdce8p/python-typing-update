@@ -20,10 +20,10 @@ jobs:
       contents: write  # Required to upload release assets
     steps:
       - name: Check out code from Github
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
-        uses: actions/setup-python@v6.1.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: Build distributions
