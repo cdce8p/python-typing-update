@@ -81,7 +81,7 @@ jobs:
           echo "ref: $ref"
           echo "$ref" >> cleanup_cache
       - name: Upload cleanup-cache artifact
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: cleanup_cache
           path: cleanup_cache
