@@ -21,6 +21,18 @@ updates:
           - pycodestyle
           - pyflakes
 
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+    labels:
+      - "dependency"
+    assignees:
+      - "cdce8p"
+    open-pull-requests-limit: 10
+    rebase-strategy: "disabled"
 
   - package-ecosystem: "github-actions"
     directory: "/"
