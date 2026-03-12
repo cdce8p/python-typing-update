@@ -33,6 +33,12 @@ updates:
       - "cdce8p"
     open-pull-requests-limit: 10
     rebase-strategy: "disabled"
+    groups:
+      flake8-dependencies:
+        patterns:
+          - flake8
+          - pycodestyle
+          - pyflakes
 
   - package-ecosystem: "github-actions"
     directory: "/"
