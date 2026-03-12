@@ -36,8 +36,7 @@ jobs:
         id: generate-python-key
         run: >-
           echo "key=venv-base-${{ env.CACHE_VERSION }}-${{
-            hashFiles('requirements.txt', 'requirements_test.txt',
-                      'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
+            hashFiles('requirements.txt', 'requirements_test.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
         uses: &actions-cache actions/cache@v5.0.3
@@ -165,8 +164,7 @@ jobs:
         id: generate-python-key
         run: >-
           echo "key=venv-${{ env.CACHE_VERSION }}-${{
-            hashFiles('requirements.txt', 'requirements_test.txt',
-                      'requirements_test_pre_commit.txt') }}" >> $GITHUB_OUTPUT
+            hashFiles('requirements.txt', 'requirements_test.txt') }}" >> $GITHUB_OUTPUT
       - name: Restore Python virtual environment
         id: cache-venv
         uses: *actions-cache
