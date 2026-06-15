@@ -1,6 +1,6 @@
 mypy==2.1.0
 pre-commit==4.6.0
-pylint==4.0.5
+pylint==4.0.6
 pytest==9.0.3
 pytest-asyncio==1.4.0
 types-aiofiles==25.1.0.20260518
