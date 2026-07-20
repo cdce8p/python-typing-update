@@ -32,7 +32,7 @@ jobs:
           python -m build
       - name: Upload to PyPI
         if: github.event_name == 'release'
-        uses: pypa/gh-action-pypi-publish@v1.14.0
+        uses: pypa/gh-action-pypi-publish@v1.14.1
       - name: Upload release assets
         uses: softprops/action-gh-release@v3.0.1
         with:
