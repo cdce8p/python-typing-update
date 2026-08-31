@@ -14,6 +14,7 @@ import logging
 
 import aiofiles
 from autoflake import _main as autoflake_main
+# pylint: disable-next=no-name-in-module
 from isort.main import main as isort_main
 from pyupgrade._main import main as pyupgrade_main
 import reorder_python_imports
