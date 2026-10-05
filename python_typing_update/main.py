@@ -14,6 +14,7 @@ import logging
 
 import aiofiles
 from autoflake import _main as autoflake_main
+# pylint: disable-next=no-name-in-module
 from isort.main import main as isort_main
 from pyupgrade._main import main as pyupgrade_main
 import reorder_python_imports
@@ -185,7 +186,7 @@ async def async_run(args: argparse.Namespace) -> int:
     builtins.print = original_print
     await async_restore_files(files_no_changes)
 
-    if args.limit > 0 and len(files_updated) > args.limit:
+    if 0 < args.limit < len(files_updated):
         print(
             f"Limit applied! Only updated the first {args.limit} "
             f"of {len(files_updated)} files")
