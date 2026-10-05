@@ -12,12 +12,12 @@ repos:
         additional_dependencies:
           - mccabe==0.7.0
           - pycodestyle==2.15.0
-          - pyflakes==4.0.0
+          - pyflakes==4.0.1
           - Flake8-pyproject==1.2.4
         files: ^(python_typing_update|script|tests)/.+\.py$
         exclude: *fixtures
   - repo: https://github.com/PyCQA/isort
-    rev: 9.0.1
+    rev: 9.0.2
     hooks:
       - id: isort
         exclude: *fixtures
