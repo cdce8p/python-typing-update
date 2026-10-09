@@ -106,13 +106,9 @@ async def async_main(argv: list[str] | None = None) -> int:
 
     group_py_version = py_version_options.add_mutually_exclusive_group()
     group_py_version.add_argument(
-        '--py310-plus',
-        action='store_const', dest='min_version', const=(3, 10),  default=(3, 10),
-        help="Default"
-    )
-    group_py_version.add_argument(
         '--py311-plus',
-        action='store_const', dest='min_version', const=(3, 11),
+        action='store_const', dest='min_version', const=(3, 11), default=(3, 11),
+        help="Default",
     )
     group_py_version.add_argument(
         '--py312-plus',

@@ -106,7 +106,6 @@ async def test_main(
 @pytest.mark.parametrize(
     ('argv',),
     (
-        pytest.param(['--py310-plus']),
         pytest.param(['--py311-plus']),
         pytest.param(['--py312-plus']),
         pytest.param(['--py313-plus']),
