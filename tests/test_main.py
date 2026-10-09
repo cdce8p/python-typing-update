@@ -138,7 +138,7 @@ async def test_py_version(
             'type_alias_310.py', 'type_alias_310_fixed.py',
             None, 0,
             id="type_alias_pep604_310_updated",
-            marks=pytest.mark.xfail(reason="Not implented in mypy + pyupgrade (yet)"),
+            marks=pytest.mark.xfail(reason="Not implented in pyupgrade (yet)"),
         ),
     ),
 )
