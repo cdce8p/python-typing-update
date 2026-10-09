@@ -145,7 +145,7 @@ Set the minimum Python syntax version to **3.13**. (Default: **3.11**)
 Set the minimum Python syntax version to **3.14**. (Default: **3.11**)
 
 **`--py315-plus`**  
-Set the minimum Python syntax version to **3.15**. (Default: **3.10**)
+Set the minimum Python syntax version to **3.15**. (Default: **3.11**)
 
 
 ## License
