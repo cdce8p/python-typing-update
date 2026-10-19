@@ -38,7 +38,7 @@ black = [
     "black==26.10.0",
 ]
 ruff = [
-    "ruff==0.16.10",
+    "ruff==0.17.1",
 ]
 
 [project.scripts]
