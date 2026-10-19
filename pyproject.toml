@@ -27,7 +27,7 @@ dependencies    = [
     "autoflake==2.4.0",
     "isort==9.0.2",
     "pyupgrade==3.22.0",
-    "reorder-python-imports==3.17.0",
+    "reorder-python-imports==3.19.0",
 ]
 
 [project.urls]
@@ -35,7 +35,7 @@ dependencies    = [
 
 [project.optional-dependencies]
 black = [
-    "black==26.10.0",
+    "black==26.10.1",
 ]
 ruff = [
     "ruff==0.17.1",
